@@ -7,7 +7,8 @@ auth_data = {}
 
 with open("auth.pkl", "rb") as f:
     auth_data = load(f)
-
+# NOTE: this isn't a good practice, but it gets the job done here, so I will be
+# using this until I decide to change it to an actual password store
 def store_password(username: str, password: str) -> None:
     """Helper function to store passwords in the password 'database'"""
 
@@ -26,6 +27,7 @@ def verify_account(name: str, password: str) -> bool:
         return True
     return False
 
+# TODO: remove the login function and login directly from the manager
 def login(manager: Manager) -> Account:
     """
     Sets the current logged user
