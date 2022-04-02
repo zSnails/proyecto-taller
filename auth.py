@@ -1,4 +1,7 @@
 from pickle import dump, load
+from classes import Account
+from getpass import getpass
+from manager import Manager
 
 auth_data = {}
 
@@ -22,4 +25,24 @@ def verify_account(name: str, password: str) -> bool:
     if auth_data[name] == password:
         return True
     return False
+
+def login(manager: Manager) -> Account:
+    """
+    Sets the current logged user
+
+    Parameters
+    ----------
+     - manager: a manager object
+
+    Returns
+    -------
+     - An account instance
+    """
+
+
+    username = input("Username> ")
+    password = getpass("Password> ")
+    
+    if verify_account(username, password):
+        manager.set_current(username)
 
