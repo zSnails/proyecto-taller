@@ -1,32 +1,48 @@
 from classes import Career, Course, Account, AccountType
 from typing import List, Dict
-from pickle import dump, load
+from json import load, dump
 
 
 class Manager:
 
-    courses: List[Course]
-    accounts: List[Account]
-    careers: List[Career]
+    # courses: List[Course]
+    # accounts: List[Account]
+    # careers: List[Career]
 
-    def get_courses() -> List[Course]:
+    def __init__(self):
+        self.courses: List[Course] = []
+        self.accounts: List[Account] = []
+        self.careers: List[Career] = []
+
+    def get_courses(self) -> List[Course]:
         pass
 
-    def get_accounts() -> List[Account]:
+    def get_accounts(self) -> List[Account]:
         pass
 
-    def get_students() -> List[Account]:
+    def get_students(self) -> List[Account]:
         pass
 
-    def get_admins() -> List[Account]:
+    def get_admins(self) -> List[Account]:
         pass
     
-    def get_careers() -> List[Career]:
+    def get_careers(self) -> List[Career]:
         pass
 
-def load_data(file_name: str) -> Dict:
-    pass
-
 def get_manager() -> Manager:
-    mngr = Manager()
+    """Helper function to initialize and fill a manager instance"""
 
+    mngr = Manager()
+    with open('data.json', 'r') as f:
+        data = load(f)
+        print(data)
+        for account in data["accounts"]:
+            mngr.accounts.append(Account(**account))
+
+        for course in data["courses"]:
+            mngr.courses.append(Course(**course))
+
+        for career in data["careers"]:
+            mngr.careers.append(Career(**career))
+        
+    return mngr
