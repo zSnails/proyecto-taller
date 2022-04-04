@@ -1,9 +1,10 @@
-from manager import Manager
-from classes import Account
-from auth import Auth
-from getpass import getpass
-from typing import Optional
 from command import Command, CommandCode
+from typing import Optional, List
+from classes import Account
+from getpass import getpass
+from manager import Manager
+from auth import Auth
+
 
 
 class Program:
