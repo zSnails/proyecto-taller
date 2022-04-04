@@ -8,20 +8,18 @@ def main():
 
     for cmd in command_modules:
         if cmd in ('__init__.py', '__pycache__'): continue
-        # import_module(f"..{cmd}", package="commands.subpkg").setup(p)
         import_module(f"commands.{cmd[0:-3]}").setup(p)
 
     logged_in = False
     while not logged_in:
         logged_in = p.login()
 
-    is_running = True
-    while is_running:
+    while True:
         code = p.prompt()
 
         # handle command exit codes
         if code == CommandCode.EXIT:
-            is_running = False
+            break
         elif code == CommandCode.NOT_FOUND:
             print("Command not found")
 
