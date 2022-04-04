@@ -3,6 +3,7 @@ from command import Command, CommandCode
 class ExitCommand(Command):
 
     def __init__(self):
+        super().__init__()
         self.name = "exit"
         self.aliases = ["q", "quit"]
 
