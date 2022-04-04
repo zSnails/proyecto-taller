@@ -3,7 +3,6 @@ from enum import Enum, auto
 from datetime import date, time
 from typing import List, Tuple
 
-
 class Career(BaseModel):
     """Career class to be used by relationships"""
 
@@ -20,13 +19,13 @@ class Course(BaseModel):
     start_date: date
     end_date: date
     schedule: List[Tuple[date, time, time]] = []
-    belongs_to: List[str] = []
+    belongs_to: List[int] = []
 
-class AccountType(str, Enum):
-    """AccountType enum to be used by accounts"""
+class AccountRole(Enum):
+    """AccountRole enum to be used by accounts"""
 
-    STUDENT = auto()
     ADMIN = auto()
+    STUDENT = auto()
 
 class Account(BaseModel):
     """Account class to be used by students"""
@@ -34,4 +33,4 @@ class Account(BaseModel):
     id: int
     name: str
     courses: List[Course] = []
-    _type: AccountType
+    role: AccountRole
