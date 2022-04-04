@@ -1,4 +1,4 @@
-from classes import Career, Course, Account, AccountType
+from classes import Career, Course, Account, AccountRole
 from typing import List, Dict, Optional
 from json import load, dump
 
@@ -6,26 +6,51 @@ from json import load, dump
 class Manager:
     """
     Manager class to manage internal data
-
-    Arguments
-    ---------
-        None
-    Returns
-    -------
-        None
     """
+
+    __instance = None
+
+    def __new__(cls):
+        if Manager.__instance is None:
+            Manager.__instance = object.__new__(cls)
+
+        return Manager.__instance
 
     def __init__(self):
         self.courses: List[Course] = []
         self.accounts: List[Account] = []
         self.careers: List[Career] = []
 
-        # Current user used for auth
-        self.current_user: Account
+        with open('data.json', 'r', encoding="utf-8") as f:
+            data = load(f)
+            for account in data["accounts"]:
+                self.accounts.append(Account(**account))
 
+            for course in data["courses"]:
+                self.courses.append(Course(**course))
 
-    def set_current(self, user: Account) -> None:
-        self.current_user = user
+            for career in data["careers"]:
+                self.careers.append(Career(**career))
+
+    def get_account(self, name: str = None,
+            id: int = None) -> Optional[Account]:
+        """
+        Returns an account that matches the specified data
+
+        Parameters
+        ----------
+         - name: The name of a valid account
+         - id: The id of a valid account
+        """
+
+        for account in self.accounts:
+            if account.name == name or account.id == id:
+                return account
+        return None
+
+    #TODO: implement the register_account method
+    def register_account(data):
+        raise NotImplementedError("register_account not implemented")
 
     def get_courses(self) -> List[Course]:
         """
@@ -33,7 +58,7 @@ class Manager:
 
         Parameters
         ----------
-            None
+         - None
 
         Returns
         -------
@@ -48,7 +73,7 @@ class Manager:
 
         Parameters
         ----------
-            None
+         - None
 
         Returns
         -------
@@ -62,17 +87,17 @@ class Manager:
 
         Parameters
         ----------
-            None
+         - None
 
         Returns
         -------
          - A list containing all accounts with an account type of STUDENT
         """
-        return [student for student in self.accounts if student._type == AccountType.STUDENT]
+        return [student for student in self.accounts if student._type == AccountRole.STUDENT]
     
     def get_student(self,
             name: str = None,
-            id: int = None) -> Optional[Account, None]:
+            id: int = None) -> Optional[Account]:
         """
         Returns a user whose name or id are equal to either argument
 
@@ -96,17 +121,17 @@ class Manager:
 
         Parameters
         ----------
-            None
+         - None
 
         Returns
         -------
          - A list containing all accounts with an account type of ADMIN
         """
-        return [admin for admin in self.accounts if admin._type == AccountType.ADMIN]
+        return [admin for admin in self.accounts if admin._type == AccountRole.ADMIN]
 
     def get_admin(self,
             username: str = None,
-            id: int = None) -> Optional[Account, None]:
+            id: int = None) -> Optional[Account]:
         """
         Returns a user whose name or id are equal to either argument
 
@@ -131,7 +156,7 @@ class Manager:
 
         Parameters
         ----------
-            None
+         - None
 
         Returns
         -------
@@ -145,19 +170,19 @@ class Manager:
 
         return None
 
-def get_manager() -> Manager:
-    """Helper function to initialize and fill a manager instance"""
+# def get_manager() -> Manager:
+#     """Helper function to initialize and fill a manager instance"""
+#     mngr = Manager()
+#     if Manager._Manager__instance is not None:
+#         return mngr
+#     with open('data.json', 'r', encoding="utf-8") as f:
+#         data = load(f)
+#         for account in data["accounts"]:
+#             mngr.accounts.append(Account(**account))
 
-    mngr = Manager()
-    with open('data.json', 'r') as f:
-        data = load(f)
-        print(data)
-        for account in data["accounts"]:
-            mngr.accounts.append(Account(**account))
+#         for course in data["courses"]:
+#             mngr.courses.append(Course(**course))
 
-        for course in data["courses"]:
-            mngr.courses.append(Course(**course))
-
-        for career in data["careers"]:
-            mngr.careers.append(Career(**career))
-    return mngr
+#         for career in data["careers"]:
+#             mngr.careers.append(Career(**career))
+#     return mngr
