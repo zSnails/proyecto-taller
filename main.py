@@ -22,6 +22,8 @@ def main():
             break
         elif code == CommandCode.NOT_FOUND:
             print("Command not found")
+        elif code == CommandCode.FORBIDDEN:
+            print("You can't use that command")
 
 if __name__ == '__main__':
     main()
