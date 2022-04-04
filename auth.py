@@ -3,48 +3,37 @@ from classes import Account
 from getpass import getpass
 from manager import Manager
 
-auth_data = {}
+# TODO: use a database such as mysql or mongo to store data
+class Auth:
+    """Authentication helper class for internal authentication"""
+    __instance = None
 
-with open("auth.pkl", "rb") as f:
-    auth_data = load(f)
-# NOTE: this isn't a good practice, but it gets the job done here, so I will be
-# using this until I decide to change it to an actual password store
-def store_password(username: str, password: str) -> None:
-    """Helper function to store passwords in the password 'database'"""
+    def __new__(cls):
+        if Auth.__instance is None:
+            Auth.__instance = object.__new__(cls)
 
-    auth_data[username] = password
+        return Auth.__instance
 
-    with open("auth.pkl", "wb") as auth_file:
-        dump(auth_data, auth_file)
-        auth_file.close()
-    with open("auth.pkl", "rb") as auth_file:
-        auth_data = load(auth_file)
+    def __init__(self):
+        self.auth_data = {}
+        self.load_data()
 
-def verify_account(name: str, password: str) -> bool:
-    """Helper function to verify valid login data"""
+    def load_data(self):
+        """Helper function to load data"""
+        with open("auth.pkl", "rb") as f:
+            self.auth_data = load(f)
 
-    if auth_data[name] == password:
-        return True
-    return False
+    # NOTE: this isn't a good practice, but it gets the job done here, so I will be
+    # using this until I decide to change it to an actual password store
+    # TODO: use a better authentication system
+    def store_password(self, username: str, password: str) -> None:
+        """Helper function to store passwords in the password 'database'"""
 
-# TODO: remove the login function and login directly from the manager
-def login(manager: Manager) -> Account:
-    """
-    Sets the current logged user
+        self.auth_data[username] = password
+        with open("auth.pkl", "wb") as auth_file:
+            dump(auth_data, auth_file)
+        self.load_data()
 
-    Parameters
-    ----------
-     - manager: a manager object
-
-    Returns
-    -------
-     - An account instance
-    """
-
-
-    username = input("Username> ")
-    password = getpass("Password> ")
-    
-    if verify_account(username, password):
-        manager.set_current(username)
-
+    def verify_account(self, name: str, password: str) -> bool:
+        """Helper function to verify valid login data"""
+        return self.auth_data.get(name) == password
