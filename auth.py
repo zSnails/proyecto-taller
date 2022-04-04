@@ -1,7 +1,6 @@
 from pickle import dump, load
 from classes import Account
 from getpass import getpass
-from manager import Manager
 
 # TODO: use a database such as mysql or mongo to store data
 class Auth:
@@ -31,7 +30,7 @@ class Auth:
 
         self.auth_data[username] = password
         with open("auth.pkl", "wb") as auth_file:
-            dump(auth_data, auth_file)
+            dump(self.auth_data, auth_file)
         self.load_data()
 
     def verify_account(self, name: str, password: str) -> bool:
