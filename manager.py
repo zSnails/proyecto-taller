@@ -1,5 +1,5 @@
 from classes import Career, Course, Account, AccountRole
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, Literal
 from json import load, dump
 
 
@@ -20,7 +20,7 @@ class Manager:
         self.courses: List[Course] = []
         self.accounts: List[Account] = []
         self.careers: List[Career] = []
-
+        # self.auth: Auth = Auth()
         with open('data.json', 'r', encoding="utf-8") as f:
             data = load(f)
             for account in data["accounts"]:
@@ -48,23 +48,19 @@ class Manager:
                 return account
         return None
 
-    #TODO: implement the register_account method
-    def register_account(data):
-        raise NotImplementedError("register_account not implemented")
-
-    def get_courses(self) -> List[Course]:
+    def get_courses(self, career_id: int) -> List[Course]:
         """
-        Returns a list containing all registered courses
+        Returns a list containing all registered courses for the passed career
 
         Parameters
         ----------
-         - None
+         - career: A valid career id
 
         Returns
         -------
-         - A list containing all registered courses
+         - A list containing all registered courses available for the passed career
         """
-        return self.courses
+        return [course for course in self.courses if career_id in course.belongs_to]
 
     def get_accounts(self) -> List[Account]:
         """
@@ -170,19 +166,29 @@ class Manager:
 
         return None
 
-# def get_manager() -> Manager:
-#     """Helper function to initialize and fill a manager instance"""
-#     mngr = Manager()
-#     if Manager._Manager__instance is not None:
-#         return mngr
-#     with open('data.json', 'r', encoding="utf-8") as f:
-#         data = load(f)
-#         for account in data["accounts"]:
-#             mngr.accounts.append(Account(**account))
+    def register_user(self, user: Account, password: str = None) -> Literal[True]:
+        """
+        Registers a new user to the 'data' database
 
-#         for course in data["courses"]:
-#             mngr.courses.append(Course(**course))
+        Parameters
+        ----------
+         - user: The user to be registered
+         - password: the user's password
 
-#         for career in data["careers"]:
-#             mngr.careers.append(Career(**career))
-#     return mngr
+        Returns
+        -------
+         - bool: Wether or not the user was registered
+        """
+        f = open("data.json", "r", encoding="utf-8")
+            # TODO: find a better workaround for this
+        data = load(f)
+        data["accounts"].append(user.dict())
+        f.close()
+
+        f = open("data.json", "w", encoding="utf-8")
+        f.truncate()
+        dump(data, f)
+        f.close()
+        print(str(data))
+        return True
+        
