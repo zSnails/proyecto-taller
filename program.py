@@ -6,7 +6,6 @@ from manager import Manager
 from auth import Auth
 
 
-
 class Program:
     def __init__(self):
         self.manager: Manager = Manager()
@@ -14,7 +13,7 @@ class Program:
         self.user: Account
         self.commands: List[Command] = []
 
-    def login(self) -> Optional[Account]:
+    def login(self) -> bool:
         username = input("Username> ")
         password = getpass("Password> ")
 
@@ -39,10 +38,8 @@ class Program:
         typ = self.user.role
         search_term = input(f"{user}::{typ}> ")
 
-        cmd = self.get_command(search_term)
+        cmd: Command = self.get_command(search_term)
 
-        if cmd:
-            return cmd.run()
-
-        return CommandCode.NOT_FOUND
-
+        if cmd is None: return CommandCode.NOT_FOUND
+        elif self.user.role < cmd.required_role: return CommandCode.FORBIDDEN
+        else: return cmd.run()
