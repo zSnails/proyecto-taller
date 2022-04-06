@@ -1,6 +1,6 @@
 from typing import List
 from enum import Enum, auto
-from classes import AccountRole
+from models import AccountRole
 
 class CommandCode(Enum):
     """CommandCode enum for internal command return value handling"""
