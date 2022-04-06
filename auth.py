@@ -1,8 +1,9 @@
-from pickle import dump, load
-from classes import Account
+from models import Account
 from getpass import getpass
-
-# TODO: use a database such as mysql or mongo to store data
+from secrets import token_hex
+from hashlib import sha256
+from json import load, dump, JSONDecodeError
+# NOTE: use a database such as mysql or mongo to store data
 class Auth:
     """Authentication helper class for internal authentication"""
     __instance = None
@@ -15,24 +16,44 @@ class Auth:
 
     def __init__(self):
         self.auth_data = {}
-        self.load_data()
 
     def load_data(self):
         """Helper function to load data"""
-        with open("auth.pkl", "rb") as f:
+
+        with open("auth.json", "r", encoding="utf-8") as f:
             self.auth_data = load(f)
 
-    # NOTE: this isn't a good practice, but it gets the job done here, so I will be
-    # using this until I decide to change it to an actual password store
-    # TODO: use a better authentication system
-    def store_password(self, username: str, password: str) -> None:
-        """Helper function to store passwords in the password 'database'"""
+    def check_existence(self, username: str) -> bool:
+        if not self.auth_data.get(username): return False
+        return True
 
-        self.auth_data[username] = password
-        with open("auth.pkl", "wb") as auth_file:
+    def store_password(self, username: str, password: str) -> bool:
+        """Helper function to store passwords in the password 'database'"""
+        # add salt to the password
+        salt = token_hex(8)
+        hashed_pass = sha256(f'{salt}{password}'.encode()).hexdigest()
+        if not self.auth_data.get(username):
+            self.auth_data[username] = f"{salt}:{hashed_pass}"
+        else: return False
+        with open("auth.json", "w", encoding="utf-8") as auth_file:
             dump(self.auth_data, auth_file)
         self.load_data()
 
+        return True
+
     def verify_account(self, name: str, password: str) -> bool:
         """Helper function to verify valid login data"""
-        return self.auth_data.get(name) == password
+
+        self.load_data()
+
+        data = self.auth_data.get(name)
+        if not data:
+            return False
+        salt, _password = data.split(':')
+        hashed_pass = sha256(f"{salt}{password}".encode()).hexdigest()
+        return _password == hashed_pass
+
+# a = Auth()
+
+# a.store_password('zsnails', 'sex')
+# a.verify_account('zsnails', 'sex')
