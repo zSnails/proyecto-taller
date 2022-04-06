@@ -1,7 +1,7 @@
 from command import Command, CommandCode
 from manager import Manager
 from auth import Auth
-from classes import Account, AccountRole
+from models import Account, AccountRole
 from getpass import getpass
 class RegisterCommand(Command):
 
@@ -15,9 +15,14 @@ class RegisterCommand(Command):
 
     def run(self) -> CommandCode:
         print("==== Registering a new user ====")
+        name = input("Please provide a name> ")
+        if self.auth.check_existence(name):
+            print("Username already in use")
+            return CommandCode.CONTINUE
+
         usr = Account(
             id = len(self.manager.accounts) + 1,
-            name = input("Please provide a name> "),
+            name = name,
             role = AccountRole(int(input(
                 "Available roles: 1: STUDENT, 2: ADMIN\n"
                 "What will this account be?> "))),
@@ -47,7 +52,6 @@ class RegisterCommand(Command):
 
         self.manager.register_user(usr)
         self.auth.store_password(usr.name, passwd)
-
         return CommandCode.SUCCESS
 
 def setup(program) -> None:
