@@ -1,4 +1,4 @@
-from classes import Career, Course, Account, AccountRole
+from models import Career, Course, Account, AccountRole
 from typing import List, Dict, Optional, Literal
 from json import load, dump
 
@@ -21,6 +21,19 @@ class Manager:
         self.accounts: List[Account] = []
         self.careers: List[Career] = []
         # self.auth: Auth = Auth()
+        # with open('data.json', 'r', encoding="utf-8") as f:
+        #     data = load(f)
+        #     for account in data["accounts"]:
+        #         self.accounts.append(Account(**account))
+
+        #     for course in data["courses"]:
+        #         self.courses.append(Course(**course))
+
+        #     for career in data["careers"]:
+        #         self.careers.append(Career(**career))
+        self._load_db()
+
+    def _load_db(self):
         with open('data.json', 'r', encoding="utf-8") as f:
             data = load(f)
             for account in data["accounts"]:
@@ -166,7 +179,7 @@ class Manager:
 
         return None
 
-    def register_user(self, user: Account, password: str = None) -> Literal[True]:
+    def register_user(self, user: Account, password: str = None) -> Optional[bool]:
         """
         Registers a new user to the 'data' database
 
@@ -179,16 +192,14 @@ class Manager:
         -------
          - bool: Wether or not the user was registered
         """
-        f = open("data.json", "r", encoding="utf-8")
-            # TODO: find a better workaround for this
-        data = load(f)
-        data["accounts"].append(user.dict())
-        f.close()
+        with open("data.json", "r", encoding="utf-8") as f:
+            data = load(f)
+            data["accounts"].append(user.dict())
 
-        f = open("data.json", "w", encoding="utf-8")
-        f.truncate()
-        dump(data, f)
-        f.close()
-        print(str(data))
-        return True
-        
+        with open("data.json", "w", encoding="utf-8") as f:
+            f.truncate()
+            dump(data, f)
+
+        # update cache
+        # TODO: find a better workaround
+        self._load_db()

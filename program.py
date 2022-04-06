@@ -1,17 +1,25 @@
 from command import Command, CommandCode
-from typing import Optional, List
-from classes import Account
+from typing import Optional, List, Union, Dict
+from models import Account
 from getpass import getpass
 from manager import Manager
 from auth import Auth
-
+from json import JSONDecodeError
 
 class Program:
     def __init__(self):
         self.manager: Manager = Manager()
-        self.auth: Auth = Auth()
         self.user: Account
-        self.commands: List[Command] = []
+        self.commands: Dict[str, Command] = {}
+        self.auth: Auth = Auth()
+
+        # TODO: find a better workaround
+    
+    def init(self):
+        try:
+            self.auth.load_data()
+        except JSONDecodeError:
+            self.commands.get('register-user').run()
 
     def login(self) -> bool:
         username = input("Username> ")
@@ -25,21 +33,19 @@ class Program:
         return False
 
     def load_command(self, command: Command):
-        self.commands.append(command)
+        self.commands.setdefault(command.name, command)
+        # if command.aliases:
+        #     for alias in command.aliases:
+        #         self.commands.setdefault(alias, command)
 
-    def get_command(self, search_term: str) -> Optional[Command]:
-        for command in self.commands:
-            if command.name == search_term or search_term in command.aliases:
-                return command
-        return None
-
-    def prompt(self) -> CommandCode:
+    def prompt(self) -> Union[Command, CommandCode]:
         user = self.user.name
         typ = self.user.role
         search_term = input(f"{user}::{typ}> ")
 
-        cmd: Command = self.get_command(search_term)
+        if not search_term: return CommandCode.CONTINUE
 
-        if cmd is None: return CommandCode.NOT_FOUND
+        cmd: Command = self.commands.get(search_term)
+        if not cmd: return CommandCode.NOT_FOUND
         elif self.user.role < cmd.required_role: return CommandCode.FORBIDDEN
         else: return cmd.run()
