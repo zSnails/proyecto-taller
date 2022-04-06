@@ -1,5 +1,5 @@
 from command import Command, CommandCode
-from classes import Course, AccountRole
+from models import Course, AccountRole
 
 class RegisterCourse(Command):
 
