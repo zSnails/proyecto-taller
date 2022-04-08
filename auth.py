@@ -31,7 +31,9 @@ class Auth:
         """Helper function to store passwords in the password 'database'"""
         # add salt to the password
         salt = token_hex(8)
+
         hashed_pass = sha256(f'{salt}{password}'.encode()).hexdigest()
+
         if not self.auth_data.get(username):
             self.auth_data[username] = f"{salt}:{hashed_pass}"
         else: return False

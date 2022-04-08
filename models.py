@@ -30,6 +30,7 @@ class AccountRole(IntEnum):
     STUDENT = auto()
     ADMIN = auto()
 
+
 class Account(BaseModel):
     """Account class to be used by students"""
     
