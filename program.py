@@ -14,7 +14,6 @@ class Program:
         self.auth: Auth = Auth()
 
         # TODO: find a better workaround
-    
     def init(self):
         try:
             self.auth.load_data()
@@ -34,14 +33,11 @@ class Program:
 
     def load_command(self, command: Command):
         self.commands.setdefault(command.name, command)
-        # if command.aliases:
-        #     for alias in command.aliases:
-        #         self.commands.setdefault(alias, command)
 
     def prompt(self) -> Union[Command, CommandCode]:
-        user = self.user.name
-        typ = self.user.role
-        search_term = input(f"{user}::{typ}> ")
+        user: str = self.user.name
+        typ: str = self.user.role
+        search_term: str = input(f"{user}::{typ}> ")
 
         if not search_term: return CommandCode.CONTINUE
 

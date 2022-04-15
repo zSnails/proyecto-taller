@@ -20,17 +20,6 @@ class Manager:
         self.courses: List[Course] = []
         self.accounts: List[Account] = []
         self.careers: List[Career] = []
-        # self.auth: Auth = Auth()
-        # with open('data.json', 'r', encoding="utf-8") as f:
-        #     data = load(f)
-        #     for account in data["accounts"]:
-        #         self.accounts.append(Account(**account))
-
-        #     for course in data["courses"]:
-        #         self.courses.append(Course(**course))
-
-        #     for career in data["careers"]:
-        #         self.careers.append(Career(**career))
         self._load_db()
 
     def _load_db(self):

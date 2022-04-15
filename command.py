@@ -5,11 +5,11 @@ from models import AccountRole
 class CommandCode(Enum):
     """CommandCode enum for internal command return value handling"""
 
-    EXIT = auto()
-    SUCCESS = auto()
-    CONTINUE = auto()
-    NOT_FOUND = auto()
-    FORBIDDEN = auto()
+    EXIT        = auto()
+    SUCCESS     = auto()
+    CONTINUE    = auto()
+    NOT_FOUND   = auto()
+    FORBIDDEN   = auto()
 
 class Command:
     """Command interface for internal command handling"""
