@@ -13,7 +13,7 @@ class Program:
         self.commands: Dict[str, Command] = {}
         self.auth: Auth = Auth()
 
-        # TODO: find a better workaround
+    # TODO: find a better workaround
     def init(self):
         try:
             self.auth.load_data()

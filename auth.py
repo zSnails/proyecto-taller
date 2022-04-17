@@ -54,8 +54,3 @@ class Auth:
         salt, _password = data.split(':')
         hashed_pass = sha256(f"{salt}{password}".encode()).hexdigest()
         return _password == hashed_pass
-
-# a = Auth()
-
-# a.store_password('zsnails', 'sex')
-# a.verify_account('zsnails', 'sex')
