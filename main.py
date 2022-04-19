@@ -14,16 +14,15 @@ def main():
     logged_in = False
     while not logged_in:
         logged_in = p.login()
+    
     while True:
         code = p.prompt()
-
         if code == CommandCode.CONTINUE: continue
         elif code == CommandCode.EXIT: break
         elif code == CommandCode.NOT_FOUND:
             print("Command not found")
         elif code == CommandCode.FORBIDDEN:
             print("You can't use that command")
-
 
 if __name__ == '__main__':
     main()

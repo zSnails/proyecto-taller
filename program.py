@@ -9,11 +9,12 @@ from json import JSONDecodeError
 class Program:
     def __init__(self):
         self.manager: Manager = Manager()
-        self.user: Account
+        # TODO: fix use logging before initialization
+        self.user: Account = Account()
         self.commands: Dict[str, Command] = {}
         self.auth: Auth = Auth()
 
-    # TODO: find a better workaround
+    # TODO: find a better workaround   
     def init(self):
         try:
             self.auth.load_data()
@@ -33,6 +34,9 @@ class Program:
 
     def load_command(self, command: Command):
         self.commands.setdefault(command.name, command)
+        if command.aliases:
+            for alias in command.aliases:
+                self.commands.setdefault(alias, command)
 
     def prompt(self) -> Union[Command, CommandCode]:
         user: str = self.user.name
