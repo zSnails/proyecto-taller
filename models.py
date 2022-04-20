@@ -9,19 +9,25 @@ class Career(BaseModel):
     id: int
     name: str
 
+class WeekDays(IntEnum):
+    MONDAY = auto()
+    TUESDAY = auto()
+    WEDNESDAY = auto()
+    THURSDAY = auto()
+    FRIDAY = auto()
+    SATURDAY = auto()
+    SUNDAY = auto()
+
 class Course(BaseModel):
     """Course class to be used by each account"""
 
     id: int
     name: str
-    credit: int
+    credits: int
     course_hours: int
     start_date: date
     end_date: date
-    # TODO: change the type for each schedule day to a binary number contaning
-    # each of the 7 days of the week, it should be of type int, and the other
-    # two values are fine
-    schedule: List[Tuple[date, time, time]] = []
+    schedule: List[Tuple[str, time, time]] = []
     belongs_to: List[int] = []
 
 class AccountRole(IntEnum):

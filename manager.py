@@ -92,7 +92,7 @@ class Manager:
          - A list containing all accounts with an account type of STUDENT
         """
         return [student for student in self.accounts if student._type == AccountRole.STUDENT]
-    
+
     def get_student(self,
             name: str = None,
             id: int = None) -> Optional[Account]:
@@ -168,6 +168,14 @@ class Manager:
 
         return None
 
+    def register_career(self, career: Career) -> bool:
+        with open("data.json", "r", encoding="utf-8") as f:
+            data = load(f)
+            data["careers"].append(career.dict())
+
+        with open("data.json", "w", encoding="utf-8") as f:
+            dump(data, f)
+
     def register_user(self, user: Account, password: str = None) -> Optional[bool]:
         """
         Registers a new user to the 'data' database
@@ -186,7 +194,6 @@ class Manager:
             data["accounts"].append(user.dict())
 
         with open("data.json", "w", encoding="utf-8") as f:
-            f.truncate()
             dump(data, f)
 
         # update cache

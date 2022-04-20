@@ -5,8 +5,9 @@ class ExitCommand(Command):
         super().__init__()
         self.name = "exit"
         self.aliases = ["q", "quit"]
+        self.description = "Cleanly exits the program"
 
-    def run(self) -> CommandCode:
+    def run(self, ctx) -> CommandCode:
         return CommandCode.EXIT
 
 def setup(program) -> None:

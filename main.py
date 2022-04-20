@@ -11,7 +11,7 @@ def register_admin_user(manager, auth):
     """
     Bloated function to register first user
     """
-    print("==== Registering a new user ====")
+    print("==== Registering default user ====")
     name = input("Please provide a name> ")
 
     usr = Account(
@@ -49,6 +49,8 @@ def register_admin_user(manager, auth):
     manager.register_user(usr)
     auth.store_password(usr.name, passwd)
 
+
+
 def main():
     command_modules = listdir("./commands")
     # Manage system login
@@ -67,12 +69,16 @@ def main():
         username = input("Username> ")
         password = getpass("Password> ")
         is_valid = auth.verify_account(username, password)
+
     user_account = manager.get_account(name=username)
+
     p = Program(auth, manager, user_account)
+
     # load user commands
     for cmd in command_modules:
         if cmd in ('__init__.py', '__pycache__'): continue
         import_module(f"commands.{cmd[0:-3]}").setup(p)
+
     while True:
         code = p.prompt()
         if code == CommandCode.CONTINUE: continue

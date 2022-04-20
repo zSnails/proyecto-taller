@@ -1,17 +1,17 @@
 from command import Command, CommandCode
-
+from colorama import Fore, Style
+from typing import Dict
 class HelpCommand(Command):
 
-    def __init__(self, manager, auth):
+    def __init__(self):
         super().__init__()
         self.name = "help"
         self.aliases = ["h"]
-        self.manager = manager
-        self.auth = auth
 
-    def run(self) -> CommandCode:
-        print("This is the help command")
+    def run(self, ctx) -> CommandCode:
+        for command in ctx.commands.values():
+            print(Fore.GREEN, command.name, Style.RESET_ALL, ": ", command.description, sep="")
         return CommandCode.SUCCESS
 
-def setup(program) -> None:
-    program.load_command(HelpCommand(program.manager, program.auth))
+def setup(program):
+    program.load_command(HelpCommand())

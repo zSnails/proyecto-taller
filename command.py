@@ -16,11 +16,13 @@ class Command:
     
     name: str
     aliases: List[str]
+    description: str
     required_role: AccountRole
 
     def __init__(self):
         self.name = "default"
         self.aliases = []
+        self.description = "Such a nice command!"
         self.required_role = AccountRole.STUDENT
 
     def run(self) -> CommandCode: raise NotImplementedError
