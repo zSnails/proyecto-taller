@@ -1,6 +1,8 @@
 from command import Command, CommandCode
 from models import Course, AccountRole, WeekDays
 from datetime import timedelta, datetime, time, date
+from program import Program
+
 class RegisterCourseCommand(Command):
 
     def __init__(self):
@@ -9,7 +11,7 @@ class RegisterCourseCommand(Command):
         self.aliases = ["new-course", "nc"]
         self.required_role = AccountRole.ADMIN
 
-    def run(self, ctx) -> CommandCode:
+    def run(self, ctx: Program) -> CommandCode:
         print("======= Registering a course =======")
         name = input("Course name> ")
         _credits = int(input("Course credits> "))
@@ -20,10 +22,13 @@ class RegisterCourseCommand(Command):
         end_date = input("End date (yyyy-mm-dd)> ")
         end_date = datetime.strptime(end_date, "%Y-%m-%d")
 
-        course_weeks = (end_date - start_date)
+        course_duration = (end_date - start_date)
+
+        # TODO: add which career this belongs to (can belong to many careers)
 
         course_hours = 0
         weekly_hours = 0
+        schedule = []
         print("=== Set schedule ===")
         while True:
             for idx, weekday in enumerate(WeekDays):
@@ -37,43 +42,40 @@ class RegisterCourseCommand(Command):
             day = WeekDays(int(day))
             begin = datetime.strptime(begin, "%H:%M:%S")
             end = datetime.strptime(end, "%H:%M:%S")
-
+            schedule.append((day, begin.time(), end.time()))
             weekly_hours += (end - begin).total_seconds() / 3600
 
-        print(weekly_hours)
+        # course duration in hours
+        course_hours = (course_duration.days // 30) * (weekly_hours * 4)
 
+        available_careers = []
+        all_careers = ctx.manager.get_careers()
+        for career in all_careers:
+            print(career.id, career.name)
+        while len(available_careers) != len(all_careers):
+            to_register = input("Career availability ('done' when finished)> ")
+            # TODO: manage unavailable careers
 
-        # while True:
-        #     class_day = input("Class date and start, end time (yyyy-mm-dd h:m:s h:m:s) ('done' when ready)> ")
-        #     if class_day == 'done':
-        #         break
-        #     class_day = class_day.split(" ")
-        #     print(class_day)
-        #     day, start, end = class_day
+            if to_register.lower() == 'done':
+                break
 
-        #     day = date(*[int(x) for x in day.split("-")])
-        #     print(day)
-        #     start = time(*[int(x) for x in start.split(":")])
-        #     end = time(*[int(x) for x in end.split(":")])
+            if to_register not in available_careers:
+                available_careers.append(int(to_register))
+            else:
+                print("You already chose that career")
 
-        #     schedule.append((day, start, end))
+        course = Course(
+                id = len(ctx.manager.courses) + 1,
+                name = name,
+                credits = _credits,
+                course_hours = course_hours,
+                start_date = start_date,
+                end_date = end_date,
+                schedule = schedule,
+                belongs_to = available_careers
+        )
 
-        #     start = timedelta(start.hour, start.minute, start.second)
-        #     end = timedelta(end.hour, end.minute, end.second)
-
-        #     diff = end - start
-        #     print(diff.total_seconds())
-        #     print(diff)
-        #     course_hours += diff.total_seconds()
-
-
-        # course_hours /= 3600
-        # print(course_hours)
-
-
-
-
-        return CommandCode.SUCCESS
+        ctx.manager.register_course(course)
 
 def setup(program) -> None:
     program.load_command(RegisterCourseCommand())

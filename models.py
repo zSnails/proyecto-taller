@@ -27,8 +27,9 @@ class Course(BaseModel):
     course_hours: int
     start_date: date
     end_date: date
-    schedule: List[Tuple[str, time, time]] = []
-    belongs_to: List[int] = []
+    schedule: List[Tuple[int, time, time]]
+    belongs_to: List[int]
+
 
 class AccountRole(IntEnum):
     """AccountRole enum to be used by accounts"""
@@ -39,7 +40,7 @@ class AccountRole(IntEnum):
 
 class Account(BaseModel):
     """Account class to be used by students"""
-    
+
     id: int
     name: str
     courses: List[int] = []

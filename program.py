@@ -14,14 +14,14 @@ class Program:
         self.aliases: Dict[str, Command] = {}
         self.auth: Auth = auth
 
-    
+
     def get_command(self, name: str) -> Optional[Command]:
         command = self.commands.get(name)
         if not command:
             command = self.aliases.get(name)
-        
+
         return command
-      
+
     def load_command(self, command: Command):
         self.commands.setdefault(command.name, command)
         if command.aliases:

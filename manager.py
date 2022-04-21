@@ -161,6 +161,7 @@ class Manager:
          - A list containing all registered careers
         """
         return self.careers
+
     def get_career(self, name: str = None, id: int = None):
         for career in self.careers:
             if career.name == name or career.id == id:
@@ -168,13 +169,15 @@ class Manager:
 
         return None
 
-    def register_career(self, career: Career) -> bool:
+    def register_career(self, career: Career):
         with open("data.json", "r", encoding="utf-8") as f:
             data = load(f)
             data["careers"].append(career.dict())
 
         with open("data.json", "w", encoding="utf-8") as f:
             dump(data, f)
+
+        self._load_db()
 
     def register_user(self, user: Account, password: str = None) -> Optional[bool]:
         """
@@ -198,4 +201,14 @@ class Manager:
 
         # update cache
         # TODO: find a better workaround
+        self._load_db()
+
+    def register_course(self, course: Course):
+        with open("data.json", "r", encoding="utf-8") as f:
+            data = load(f)
+            data["courses"].append(course.dict())
+
+        with open("data.json", "w", encoding="utf-8") as f:
+            dump(data, f, default=str)
+
         self._load_db()
