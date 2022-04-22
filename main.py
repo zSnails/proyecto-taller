@@ -1,11 +1,14 @@
 from program import Program, CommandCode
 from auth import Auth
-from models import Account, AccountRole
+from models import Account, AccountRole, ReportType
 from manager import Manager
 from getpass import getpass
 from os import listdir
 from importlib import import_module
 from json import JSONDecodeError
+from datetime import datetime, timedelta
+from arrow import get
+from colorama import Fore, Style
 
 def register_admin_user(manager, auth):
     """
@@ -18,26 +21,13 @@ def register_admin_user(manager, auth):
         id = len(manager.accounts) + 1,
         name = name,
         role = AccountRole.ADMIN,
-        career = 0
+        career = 0,
+        courses = [],
+        passed = [],
+        failed = [],
+        reports = 1,
+        activities = []
     )
-
-    for career in manager.careers:
-        print(career.id, ": ", career.name, sep="")
-
-    usr.career = int(input("Please choose a career> "))
-
-    crs = manager.get_courses(usr.career)
-    
-    if crs:
-        for course in crs:
-            print(course.id, ": ", course.name, sep="")
-
-        # TODO: actually restrict the careers that you can register
-        while len(usr.courses) != len(manager.courses):
-            course_id = input("Enter course id (type 'done' when finished)> ")
-            if course_id == 'done': break
-
-            usr.courses.append(int(course_id))
 
     while True:
         passwd = getpass("Create a password> ")
@@ -49,6 +39,22 @@ def register_admin_user(manager, auth):
     manager.register_user(usr)
     auth.store_password(usr.name, passwd)
 
+def print_activities(activities):
+    print("Blue means leisure activity, Green means course bound activity")
+    for activity in activities:
+        day = get(activity.activity_date)
+
+        end = datetime.strptime(str(activity.end_hour), "%H:%M:%S")
+        begin = datetime.strptime(str(activity.start_hour), "%H:%M:%S")
+    
+        hours = round((end - begin).total_seconds() / 3600)
+    
+        col = Fore.BLUE
+
+        if activity.course:
+            col = Fore.GREEN
+
+        print(f"\t- {col}{day.humanize()}{Style.RESET_ALL}: {activity.name}\n\t  Description: {activity.description}\n\t  Activity hours: {hours}")
 
 
 def main():
@@ -73,16 +79,34 @@ def main():
     user_account = manager.get_account(name=username)
 
     p = Program(auth, manager, user_account)
+    
+    # 
+    if datetime.today().weekday() == 0 and user_account.reports == ReportType.WEEKLY:
+        monday = datetime.today()
+        friday = monday + timedelta(days=5)
+        activities = [a for a in manager.activities if monday.date() <= a.activity_date and a.activity_date <= friday.date() and a.belongs_to == user_account.id]
+        print("Weekly report - Activities for this week:")
+        print_activities(activities)        
 
+    elif user_account.reports == ReportType.DAILY:
+        activities = [a for a in manager.activities if a.activity_date == datetime.today().date() and a.belongs_to == user_account.id]
+        print("Daily report - Activities for today:")
+        print_activities(activities)
+    
+    
     # load user commands
     for cmd in command_modules:
         if cmd in ('__init__.py', '__pycache__'): continue
         import_module(f"commands.{cmd[0:-3]}").setup(p)
-
+    
+    
+    print("Type 'help' for help")
     while True:
         code = p.prompt()
         if code == CommandCode.CONTINUE: continue
-        elif code == CommandCode.EXIT: break
+        elif code == CommandCode.EXIT: 
+            print("Thanks for using our software")
+            break
         elif code == CommandCode.NOT_FOUND:
             print("Command not found")
         elif code == CommandCode.FORBIDDEN:
