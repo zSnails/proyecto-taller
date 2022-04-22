@@ -72,7 +72,8 @@ class RegisterCourseCommand(Command):
                 start_date = start_date,
                 end_date = end_date,
                 schedule = schedule,
-                belongs_to = available_careers
+                belongs_to = available_careers,
+                weekly_hours = weekly_hours
         )
 
         ctx.manager.register_course(course)

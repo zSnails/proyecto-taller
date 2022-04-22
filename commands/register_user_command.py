@@ -1,7 +1,7 @@
 from command import Command, CommandCode
 from manager import Manager
 from auth import Auth
-from models import Account, AccountRole
+from models import Account, AccountRole, ReportType
 from getpass import getpass
 class RegisterCommand(Command):
 
@@ -25,7 +25,10 @@ class RegisterCommand(Command):
             role = AccountRole(int(input(
                 "Available roles: 1: STUDENT, 2: ADMIN\n"
                 "What will this account be?> "))),
-            career = 0
+            career = 0,
+            reports = ReportType(int(input("Available types: 1: DAILY, 2: WEEKLY\n"
+                "Choose a report type>"))),
+            phone_number = input("Please provide a phone number (optional)> ")
         )
 
         for career in ctx.manager.careers:

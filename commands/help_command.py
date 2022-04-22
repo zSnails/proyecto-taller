@@ -10,7 +10,8 @@ class HelpCommand(Command):
 
     def run(self, ctx) -> CommandCode:
         for command in ctx.commands.values():
-            print(Fore.GREEN, command.name, Style.RESET_ALL, ": ", command.description, sep="")
+            if command.required_role > ctx.user.role: continue
+            print(Fore.GREEN, command.name, Style.RESET_ALL, ": ", command.description, "\nAliases: ", command.aliases, sep="")
         return CommandCode.SUCCESS
 
 def setup(program):
