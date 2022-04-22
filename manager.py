@@ -40,7 +40,7 @@ class Manager:
                 self.careers.append(Career(**career))
     
             for activity in data["activities"]:
-                self.activities.append(Avtivity(**activity))
+                self.activities.append(Activity(**activity))
 
     def get_account(self, name: str = None,
             id: int = None) -> Optional[Account]:
@@ -53,15 +53,14 @@ class Manager:
          - id: The id of a valid account
         """
 
-        for account in self.accounts:
+        for account in self.accounts:
             if account.name == name or account.id == id:
-                return account
+                return account
         return None
-
+
     def get_courses(self, career_id: int) -> List[Course]:
-        """
+        """
         Returns a list containing all registered courses for the passed career
-
         Parameters
         ----------
          - career: A valid career id
@@ -101,11 +100,9 @@ class Manager:
         """
         return [student for student in self.accounts if student._type == AccountRole.STUDENT]
 
-    def get_activities(self, id=None, user_id=None):
-        usr = self.get_account(id=user_id)
-        if usr:
-            return [activity for activity in self.activities if activity.id in usr.activities]
-    
+    def get_activities(self):
+        return self.activities
+
     def get_student(self,
             name: str = None,
             id: int = None) -> Optional[Account]:
@@ -242,6 +239,8 @@ class Manager:
                     account[status].append(int(course_id))
         with open("data.json", "w", encoding="utf-8") as f:
             dump(data, f)
+
+        self._load_db()
 
     def register_course(self, course: Course):
         with open("data.json", "r", encoding="utf-8") as f:
@@ -253,3 +252,46 @@ class Manager:
 
         self._load_db()
 
+    def register_activity(self, activity: Activity):
+        with open("data.json", "r", encoding="utf-8") as f:
+            data = load(f)
+            data["activities"].append(activity.dict())
+        with open("data.json", "w", encoding="utf-8") as f:
+            dump(data, f, default=str)
+
+        self._load_db()
+
+    def update_activity(self, id=None):
+        with open("data.json", "r", encoding="utf-8") as f:
+            data = load(f)
+            for activity in data["activities"]:
+                if activity["id"] == id:
+                    activity["done"] = True
+        with open("data.json", "w", encoding="utf-8") as f:
+            dump(data, f)
+
+        self._load_db()
+
+    def switch_account_career(self, career_id=None, account_id=None):
+        with open("data.json", "r", encoding="utf-8") as f:
+            data = load(f)
+            for acc in data["accounts"]:
+                if acc["id"] == account_id:
+                    acc["career"] = career_id
+        with open("data.json", "w", encoding="utf-8") as f:
+            dump(data, f)
+        
+        self._load_db()
+
+    def reset_account_courses(self, account_id=None):
+        with open("data.json", "r", encoding="utf-8") as f:
+            data = load(f)
+            for acc in data["accounts"]:
+                if acc["id"] == account_id:
+                    acc["courses"] = []
+                    acc["passed"] = []
+                    acc["failed"] = []
+        with open("data.json", "w", encoding="utf-8") as f:
+            dump(data, f)
+        
+        self._load_db()
