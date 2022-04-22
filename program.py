@@ -2,6 +2,7 @@ from command import Command, CommandCode
 from typing import Optional, List, Union, Dict
 from models import Account
 from manager import Manager
+from colorama import Fore, Style
 from auth import Auth
 from json import JSONDecodeError
 
@@ -31,7 +32,8 @@ class Program:
     def prompt(self) -> Union[Command, CommandCode]:
         user: str = self.user.name
         typ: str = self.user.role
-        search_term: str = input(f"{user}::{typ}> ")
+
+        search_term: str = input(f"{Fore.CYAN}{user}{Style.RESET_ALL}::{typ}> ")
 
         if not search_term: return CommandCode.CONTINUE
 

@@ -1,0 +1,21 @@
+from command import Command, CommandCode
+from program import Program
+
+class ViewRegisteredCommand(Command):
+    def __init__(self):
+        super().__init__()
+        self.name = "view-courses"
+        self.aliases = ["vrc"]
+
+    def run(self, ctx: Program) -> CommandCode:
+        for course in ctx.manager.get_account_courses(id=ctx.user.id):
+            end = ""
+            if course.id in ctx.user.passed:
+                end = "- passed"
+            elif course.id in ctx.user.failed:
+                end = "- failed"
+            print(course.id, course.name, end)
+        return CommandCode.SUCCESS
+
+def setup(program):
+    program.load_command(ViewRegisteredCommand())

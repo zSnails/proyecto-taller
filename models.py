@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from enum import IntEnum, auto
 from datetime import date, time
-from typing import List, Tuple
+from typing import List, Tuple, Optional
 
 class Career(BaseModel):
     """Career class to be used by relationships"""
@@ -44,5 +44,20 @@ class Account(BaseModel):
     id: int
     name: str
     courses: List[int] = []
+    passed: List[int] = []
+    failed: List[int] = []
+    activities: List[int] = []
     career: int
     role: AccountRole
+    
+
+
+class Activity(BaseModel):
+    id: int
+    name: str
+    belongs_to: int
+    description: str
+    course: Optional[int]
+    start_date: date
+    end_date: date
+    duration: time
