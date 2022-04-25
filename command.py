@@ -3,7 +3,11 @@ from enum import Enum, auto
 from models import AccountRole
 
 class CommandCode(Enum):
-    """CommandCode enum for internal command return value handling"""
+    """
+    The commandcode enum represents the different command exit codes that might occur
+    a command code is returned from a command, and it tells the program what to do based
+    on the type of code
+    """
 
     EXIT        = auto()
     SUCCESS     = auto()
@@ -12,7 +16,10 @@ class CommandCode(Enum):
     FORBIDDEN   = auto()
 
 class Command:
-    """Command interface for internal command handling"""
+    """
+    The command class is just an interface for a command implementation and is not
+    to be used other than inherit from it
+    """
     
     name: str
     aliases: List[str]

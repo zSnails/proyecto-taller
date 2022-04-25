@@ -4,26 +4,40 @@ from datetime import date, time
 from typing import List, Tuple, Optional
 
 class Career(BaseModel):
-    """Career class to be used by relationships"""
+    """
+    The career model holds information related to a specific career
+    such as its id and name
+    """
 
     id: int
     name: str
 
 class WeekDays(IntEnum):
-    MONDAY = auto()
-    TUESDAY = auto()
-    WEDNESDAY = auto()
-    THURSDAY = auto()
-    FRIDAY = auto()
-    SATURDAY = auto()
-    SUNDAY = auto()
+    """
+    The weekdays enum represents each day of the week with MONDAY being = 1 and SUNDAY = 7
+    """
+
+    MONDAY      = auto()
+    TUESDAY     = auto()
+    WEDNESDAY   = auto()
+    THURSDAY    = auto()
+    FRIDAY      = auto()
+    SATURDAY    = auto()
+    SUNDAY      = auto()
 
 class ReportType(IntEnum):
-    DAILY = auto()
-    WEEKLY = auto()
+    """
+    The reporttype enum is used to represent an user's report type (daily or weekly)
+    """
+
+    DAILY   = auto()
+    WEEKLY  = auto()
 
 class Course(BaseModel):
-    """Course class to be used by each account"""
+    """
+    The course model represents and holds information about a course
+    such as its id, name and credits
+    """
 
     id: int
     name: str
@@ -37,14 +51,21 @@ class Course(BaseModel):
 
 
 class AccountRole(IntEnum):
-    """AccountRole enum to be used by accounts"""
+    """
+    The accountrole enum represents the different account type the program has
+    with STUDENT = 1 and ADMIN = 2
+    """
 
     STUDENT = auto()
-    ADMIN = auto()
+    ADMIN   = auto()
 
 
 class Account(BaseModel):
-    """Account class to be used by students"""
+    """
+    The account model represents and holds information about an account
+    it holds the different properties that an account might have
+    such as the name and courses
+    """
 
     id: int
     name: str
@@ -59,6 +80,11 @@ class Account(BaseModel):
 
 
 class Activity(BaseModel):
+    """
+    The activity model represents and holds information about an activity
+    it holds all of its properties, ranging from the id of the activity to the end_hour of said activity
+    """
+
     id: int
     name: str
     belongs_to: int
@@ -68,4 +94,4 @@ class Activity(BaseModel):
     done: bool
     start_hour: time
     end_hour: time
-   
+

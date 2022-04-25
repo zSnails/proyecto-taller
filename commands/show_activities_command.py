@@ -12,7 +12,7 @@ class ShowActivitiesCommand(Command):
         self.aliases = ["sa", "sha"]
     
     def run(self, ctx: Program) -> CommandCode:
-        current_activities = [activity for activity in ctx.manager.get_activities() if activity.belongs_to == ctx.user.id]
+        current_activities = [activity for activity in ctx.manager.get_activities() if activity.id in ctx.user.activities]
 
         for activity in current_activities:
             human = get(activity.activity_date)

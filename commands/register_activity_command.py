@@ -42,8 +42,8 @@ class RegisterActivityCommand(Command):
         for _c in [c for c in ctx.manager.courses if c.id in ctx.user.courses and c.end_date > datetime.now().date() and c.start_date < datetime.now().date()]:
             total_weekly_hours += _c.weekly_hours
         
-        if total_weekly_hours > 72:
-            print("You can't have more than 72 hours of work on a single week!")
+        if total_weekly_hours > 74:
+            print("You can't have more than 74 hours of work on a single week!")
             return CommandCode.CONTINUE
         
         activity = Activity(
@@ -57,7 +57,7 @@ class RegisterActivityCommand(Command):
             start_hour = begin_time.time(),
             end_hour = end_time.time()
         )
-        
+        ctx.manager.add_activity_to_user(activity.id, ctx.user.id)        
         ctx.manager.register_activity(activity)
         return CommandCode.SUCCESS
 
