@@ -12,7 +12,7 @@ class TimePercentageReport(Command):
 
     def run(self, ctx: Program) -> CommandCode:
        
-        activities = [a for a in ctx.manager.activities if a.activity_date == datetime.today().date()]#and a.belongs_to == ctx.user.id]
+        activities = [a for a in ctx.manager.activities if a.activity_date == datetime.today().date() and a.belongs_to == ctx.user.id]
 
         total = len(activities)
         leisure_finished = len([a for a in activities if a.done and not a.course])
@@ -27,6 +27,7 @@ class TimePercentageReport(Command):
             print("=" * 20)
         
             bound_finished = len([a for a in activities if a.done and a.course])
+            print(bound_finished)
             percentage = round((bound_finished * 100) / total)
 
             print(f"{Fore.LIGHTGREEN_EX}{percentage}%{Style.RESET_ALL} Of course bound activities are marked as done\n"

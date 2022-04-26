@@ -29,6 +29,8 @@ class ShowProfileCommand(Command):
         courses = ctx.manager.get_courses(career_id=ctx.user.career)
         print(f"{Fore.MAGENTA}Courses{Style.RESET_ALL}:")
         for course in courses:
+            if course.id not in ctx.user.courses:
+                continue
             end = ""
             if course.id in ctx.user.passed:
                 end = f"{Fore.GREEN}- passed{Style.RESET_ALL}"

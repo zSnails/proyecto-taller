@@ -11,7 +11,8 @@ class MarkActivityAsDone(Command):
     def run(self, ctx: Program):
         
         for activity in ctx.manager.activities:
-            print(activity.id, activity.name)
+            if activity.id in ctx.user.activities:
+                print(activity.id, activity.name)
         
         activity_id = input("Enter the id of the activity to mark as done> ")
         

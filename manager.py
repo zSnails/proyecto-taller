@@ -396,7 +396,7 @@ class Manager:
 
         self._load_db()
     
-    def add_activity_to_user(activity_id, user_id):
+    def add_activity_to_user(self, activity_id, user_id):
         """
         This method updates a specified user's activities and appends a
         new activity to them
@@ -409,7 +409,7 @@ class Manager:
 
         with open("data.json", "r", encoding="utf-8") as f:
             data = load(f)
-            for user in data["users"]:
+            for user in data["accounts"]:
                 if user["id"] == user_id:
                     user["activities"].append(activity_id)
         with open("data.json", "w", encoding="utf-8") as f:
