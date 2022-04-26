@@ -6,6 +6,7 @@ class SwitchCareerCommand(Command):
         super().__init__()
         self.name = "switch-career"
         self.aliases = ["sc", "swc"]
+        self.description = "Lets the user switch career"
 
     def run(self, ctx: Program) -> CommandCode:
         

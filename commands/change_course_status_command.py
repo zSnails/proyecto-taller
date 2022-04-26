@@ -6,6 +6,7 @@ class ChangeCourseStatusCommand(Command):
         super().__init__()
         self.name = "update-course-status"
         self.aliases = ["ucs"]
+        self.description = "Lets you change the status of a given course"
 
     def run(self, ctx: Program) -> CommandCode:
         print("====== Updating course status =======")

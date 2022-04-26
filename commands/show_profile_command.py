@@ -7,6 +7,7 @@ class ShowProfileCommand(Command):
         super().__init__()
         self.name = "show-profile"
         self.aliases = ["sp", "shp"]
+        self.description = "Shows some information about your profile"
 
     def run(self, ctx: Program) -> CommandCode:
         

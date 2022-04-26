@@ -123,7 +123,7 @@ def main():
     elif user_account.reports == ReportType.DAILY:
         activities = [a for a in manager.activities if a.activity_date == datetime.today().date() and a.belongs_to == user_account.id]
         courses = [c for c in manager.courses if c.schedule[0][0] == datetime.today().weekday() + 1 and c.id in user_account.courses]
-        print(courses)
+        # print(courses)
         print("Daily report - Activities for today:")
         print_activities(activities, courses)
 

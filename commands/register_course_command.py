@@ -10,6 +10,7 @@ class RegisterCourseCommand(Command):
         self.name = "register-course"
         self.aliases = ["new-course", "nc"]
         self.required_role = AccountRole.ADMIN
+        self.description = "Lets you register new courses"
 
     def run(self, ctx: Program) -> CommandCode:
         print("======= Registering a course =======")

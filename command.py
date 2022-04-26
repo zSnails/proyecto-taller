@@ -29,7 +29,7 @@ class Command:
     def __init__(self):
         self.name = "default"
         self.aliases = []
-        self.description = "Such a nice command!"
+        # self.description = "Such a nice command!"
         self.required_role = AccountRole.STUDENT
 
     def run(self) -> CommandCode: raise NotImplementedError

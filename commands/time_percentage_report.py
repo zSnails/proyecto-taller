@@ -8,6 +8,7 @@ class TimePercentageReport(Command):
         super().__init__()
         self.name = "time-percentage-report"
         self.aliases = ["tpr", "t"]
+        self.description = "Shows a time percentage report"
 
     def run(self, ctx: Program) -> CommandCode:
        

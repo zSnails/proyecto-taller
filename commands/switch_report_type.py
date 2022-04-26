@@ -7,6 +7,7 @@ class SwitchReportTypeCommand(Command):
         super().__init__()
         self.name = "switch-report-type"
         self.aliases = ["srt", "swrt"]
+        self.description = "Lets you switch your report type"
 
     def run(self, ctx: Program) -> CommandCode:
         ctx.manager.switch_account_report_type(ctx.user.id)

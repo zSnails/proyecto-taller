@@ -10,6 +10,7 @@ class ShowActivitiesCommand(Command):
         super().__init__()
         self.name = "show-activities"
         self.aliases = ["sa", "sha"]
+        self.description = "Show a list of your activities"
     
     def run(self, ctx: Program) -> CommandCode:
         current_activities = [activity for activity in ctx.manager.get_activities() if activity.id in ctx.user.activities]

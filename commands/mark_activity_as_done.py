@@ -6,6 +6,7 @@ class MarkActivityAsDone(Command):
         super().__init__()
         self.name = "mark-activity-as-done"
         self.aliases = ["masd"]
+        self.description = "Lets you mark an activity as done"
 
     def run(self, ctx: Program):
         

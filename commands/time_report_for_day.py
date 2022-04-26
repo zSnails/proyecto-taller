@@ -8,6 +8,7 @@ class TimeReportForDayCommand(Command):
         super().__init__()
         self.name = "time-report-for-day"
         self.aliases = ["trfd"]
+        self.description = "Shows a time report for the current day"
         
     def run(self, ctx: Program) -> CommandCode:
         

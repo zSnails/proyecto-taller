@@ -8,6 +8,8 @@ class RegisterActivityCommand(Command):
         super().__init__()
         self.name = "register-activity"
         self.aliases = ["ra", "na"]
+        self.description = "Lets you register a new activity"
+
     def run(self, ctx: Program) -> CommandCode:
         
         print("===== Registering an activity =======")

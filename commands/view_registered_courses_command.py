@@ -1,11 +1,13 @@
 from command import Command, CommandCode
 from program import Program
 from colorama import Fore, Style
+
 class ViewRegisteredCommand(Command):
     def __init__(self):
         super().__init__()
         self.name = "view-courses"
         self.aliases = ["vc"]
+        self.description = "Shows a list of registered courses"
 
     def run(self, ctx: Program) -> CommandCode:
         for course in ctx.manager.get_account_courses(id=ctx.user.id):

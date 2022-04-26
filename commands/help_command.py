@@ -7,6 +7,7 @@ class HelpCommand(Command):
         super().__init__()
         self.name = "help"
         self.aliases = ["h"]
+        self.description = "Show this message!"
 
     def run(self, ctx) -> CommandCode:
         for command in ctx.commands.values():
