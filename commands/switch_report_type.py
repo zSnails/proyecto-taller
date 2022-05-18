@@ -12,7 +12,9 @@ class SwitchReportTypeCommand(Command):
     def run(self, ctx: Program) -> CommandCode:
         ctx.manager.switch_account_report_type(ctx.user.id)
         print("Sucessfully switched report type, restart to see changes")
-        
+
         return CommandCode.SUCCESS
+
+
 def setup(program):
     program.load_command(SwitchReportTypeCommand())

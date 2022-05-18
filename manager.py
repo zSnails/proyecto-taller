@@ -1,4 +1,4 @@
-from models import Career, Course, Account, AccountRole, Activity
+from models import Career, Course, Account, AccountRole, Activity, LinkedList
 from typing import List, Dict, Optional, Literal
 from json import load, dump
 
@@ -13,30 +13,26 @@ class Manager:
     def __new__(cls):
         if Manager.__instance is None:
             Manager.__instance = object.__new__(cls)
-
         return Manager.__instance
 
     def __init__(self):
-        self.courses: List[Course] = []
-        self.accounts: List[Account] = []
-        self.careers: List[Career] = []
-        self.activities: List[Activity] = []
         self._load_db()
 
     def _load_db(self):
         """
         The _load_db function updates the current state of the programs data
         it also resets all the data to update it
-        
+
         Returns
         -------
             -    None
         """
-        self.accounts = []
-        self.courses = []
-        self.careers = []
-        self.activities = []
-        with open('data.json', 'r', encoding="utf-8") as f:
+        self.accounts = LinkedList()
+        self.courses = LinkedList()
+        self.careers = LinkedList()
+        self.activities = LinkedList()
+
+        with open("data.json", "r", encoding="utf-8") as f:
             data = load(f)
             for account in data["accounts"]:
                 self.accounts.append(Account(**account))
@@ -50,8 +46,7 @@ class Manager:
             for activity in data["activities"]:
                 self.activities.append(Activity(**activity))
 
-    def get_account(self, name: str = None,
-            id: int = None) -> Optional[Account]:
+    def get_account(self, name: str = None, id: int = None) -> Optional[Account]:
         """
         Returns an account that matches the specified data
 
@@ -106,14 +101,14 @@ class Manager:
         -------
          - A list containing all accounts with an account type of STUDENT
         """
-        return [student for student in self.accounts if student._type == AccountRole.STUDENT]
+        return [
+            student for student in self.accounts if student._type == AccountRole.STUDENT
+        ]
 
     def get_activities(self):
         return self.activities
 
-    def get_student(self,
-            name: str = None,
-            id: int = None) -> Optional[Account]:
+    def get_student(self, name: str = None, id: int = None) -> Optional[Account]:
         """
         Returns a user whose name or id are equal to either argument
 
@@ -145,9 +140,7 @@ class Manager:
         """
         return [admin for admin in self.accounts if admin._type == AccountRole.ADMIN]
 
-    def get_admin(self,
-            username: str = None,
-            id: int = None) -> Optional[Account]:
+    def get_admin(self, username: str = None, id: int = None) -> Optional[Account]:
         """
         Returns a user whose name or id are equal to either argument
 
@@ -163,6 +156,7 @@ class Manager:
         for admin in self.get_admins():
             if admin.name == username or admin.id == id:
                 return admin
+
     def get_careers(self) -> List[Career]:
         """
         Returns a list containing all registered careers
@@ -258,7 +252,9 @@ class Manager:
 
         self._load_db()
 
-    def update_account_courses(self, course: Course, account_id=None, account_name=None):
+    def update_account_courses(
+        self, course: Course, account_id=None, account_name=None
+    ):
         """
         This method updates the registered courses on a specific account
         it's used to add courses, but not remove them
@@ -283,8 +279,9 @@ class Manager:
 
         self._load_db()
 
-    def update_user_course_status(self, status: str, course_id=None,
-            account_id=None, account_name=None):
+    def update_user_course_status(
+        self, status: str, course_id=None, account_id=None, account_name=None
+    ):
         """
         This method updated the current status of a specific course on a specific user
         this is used to change the status to passed or failed
@@ -313,7 +310,7 @@ class Manager:
     def register_course(self, course: Course):
         """
         This method registers a new course and saves it to the `database`
-        
+
         Parameters
         ----------
             -   course: A course instance to be saved to the `database`
@@ -395,12 +392,12 @@ class Manager:
             dump(data, f)
 
         self._load_db()
-    
+
     def add_activity_to_user(self, activity_id, user_id):
         """
         This method updates a specified user's activities and appends a
         new activity to them
-        
+
         Parameters
         ----------
             -    activity_id: The id of the activity to add to the user
@@ -416,16 +413,16 @@ class Manager:
             dump(data, f)
 
         self._load_db()
-    
+
     def reset_account_courses(self, account_id=None):
         """
         This method resets the specified user's courses list
         this is to be used when switching career
-        
+
         Parameters
         ----------
             -    account_id: The id of the ueser to be updated
-        
+
         Returns
         -------
             -    None
@@ -442,15 +439,15 @@ class Manager:
             dump(data, f)
 
         self._load_db()
-        
+
     def switch_account_report_type(self, account_id=None):
         """
         The `switch_account_report_type` method updates an account's report typa
-        
+
         Parameters
         ----------
             -    account_id: The id of the account to look for
-        
+
         Returns
         -------
             -    None

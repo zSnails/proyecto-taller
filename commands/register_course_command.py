@@ -3,8 +3,8 @@ from models import Course, AccountRole, WeekDays
 from datetime import timedelta, datetime, time, date
 from program import Program
 
-class RegisterCourseCommand(Command):
 
+class RegisterCourseCommand(Command):
     def __init__(self):
         super().__init__()
         self.name = "register-course"
@@ -23,7 +23,7 @@ class RegisterCourseCommand(Command):
         end_date = input("End date (yyyy-mm-dd)> ")
         end_date = datetime.strptime(end_date, "%Y-%m-%d")
 
-        course_duration = (end_date - start_date)
+        course_duration = end_date - start_date
 
         # TODO: add which career this belongs to (can belong to many careers)
 
@@ -35,7 +35,7 @@ class RegisterCourseCommand(Command):
             for idx, weekday in enumerate(WeekDays):
                 print(idx + 1, str(weekday).split(".").pop())
             day = input("Class day (enter day number) ('done' when finished)> ")
-            if day == 'done':
+            if day == "done":
                 break
             begin = input("Start hour (h:m:s)> ")
             end = input("End hour (h:m:s)> ")
@@ -57,7 +57,7 @@ class RegisterCourseCommand(Command):
             to_register = input("Career availability ('done' when finished)> ")
             # TODO: manage unavailable careers
 
-            if to_register.lower() == 'done':
+            if to_register.lower() == "done":
                 break
 
             if to_register not in available_careers:
@@ -66,18 +66,19 @@ class RegisterCourseCommand(Command):
                 print("You already chose that career")
 
         course = Course(
-                id = len(ctx.manager.courses) + 1,
-                name = name,
-                credits = _credits,
-                course_hours = course_hours,
-                start_date = start_date,
-                end_date = end_date,
-                schedule = schedule,
-                belongs_to = available_careers,
-                weekly_hours = weekly_hours
+            id=len(ctx.manager.courses) + 1,
+            name=name,
+            credits=_credits,
+            course_hours=course_hours,
+            start_date=start_date,
+            end_date=end_date,
+            schedule=schedule,
+            belongs_to=available_careers,
+            weekly_hours=weekly_hours,
         )
 
         ctx.manager.register_course(course)
+
 
 def setup(program) -> None:
     program.load_command(RegisterCourseCommand())

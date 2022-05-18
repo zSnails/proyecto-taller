@@ -10,6 +10,7 @@ from datetime import datetime, timedelta
 from arrow import get
 from colorama import Fore, Style
 
+
 def register_admin_user(manager, auth):
     """
     The register admin user function allows the program to register the main
@@ -28,26 +29,28 @@ def register_admin_user(manager, auth):
     name = input("Please provide a name> ")
 
     usr = Account(
-        id = len(manager.accounts) + 1,
-        name = name,
-        role = AccountRole.ADMIN,
-        career = 0,
-        courses = [],
-        passed = [],
-        failed = [],
-        reports = 1,
-        activities = []
+        id=len(manager.accounts) + 1,
+        name=name,
+        role=AccountRole.ADMIN,
+        career=0,
+        courses=[],
+        passed=[],
+        failed=[],
+        reports=1,
+        activities=[],
     )
 
     while True:
         passwd = getpass("Create a password> ")
         confirmation = getpass("Confirm your password> ")
-        if passwd == confirmation: break
+        if passwd == confirmation:
+            break
 
         print("The passwords don't match, please try again")
 
     manager.register_user(usr)
     auth.store_password(usr.name, passwd)
+
 
 def print_activities(activities, courses):
     """
@@ -75,8 +78,11 @@ def print_activities(activities, courses):
         if activity.course:
             col = Fore.GREEN
 
-        print(f"\t- {col}{day.humanize()}{Style.RESET_ALL}: {activity.name}\n\t  Description: {activity.description}\n\t  Activity hours: {hours}")
+        print(
+            f"\t- {col}{day.humanize()}{Style.RESET_ALL}: {activity.name}\n\t  Description: {activity.description}\n\t  Activity hours: {hours}"
+        )
     from calendar import day_name
+
     print("===== Courses =======")
     for course in courses:
         print(f"[{course.id}] - {course.name}")
@@ -98,7 +104,6 @@ def main():
     except JSONDecodeError:
         register_admin_user(manager, auth)
 
-
     is_valid = False
 
     while not is_valid:
@@ -111,33 +116,48 @@ def main():
 
     p = Program(auth, manager, user_account)
 
-
     if datetime.today().weekday() == 0 and user_account.reports == ReportType.WEEKLY:
         monday = datetime.today()
         friday = monday + timedelta(days=5)
-        activities = [a for a in manager.activities if monday.date() <= a.activity_date and a.activity_date <= friday.date() and a.belongs_to == user_account.id]
+        activities = [
+            a
+            for a in manager.activities
+            if monday.date() <= a.activity_date
+            and a.activity_date <= friday.date()
+            and a.belongs_to == user_account.id
+        ]
         courses = [c for c in manager.courses if c.id in user_account.courses]
         print("Weekly report - Activities for this week:")
         print_activities(activities, courses)
 
     elif user_account.reports == ReportType.DAILY:
-        activities = [a for a in manager.activities if a.activity_date == datetime.today().date() and a.belongs_to == user_account.id]
-        courses = [c for c in manager.courses if c.schedule[0][0] == datetime.today().weekday() + 1 and c.id in user_account.courses]
+        activities = [
+            a
+            for a in manager.activities
+            if a.activity_date == datetime.today().date()
+            and a.belongs_to == user_account.id
+        ]
+        courses = [
+            c
+            for c in manager.courses
+            if c.schedule[0][0] == datetime.today().weekday() + 1
+            and c.id in user_account.courses
+        ]
         # print(courses)
         print("Daily report - Activities for today:")
         print_activities(activities, courses)
 
-
     # load user commands
     for cmd in command_modules:
-        if cmd in ('__init__.py', '__pycache__'): continue
+        if cmd in ("__init__.py", "__pycache__"):
+            continue
         import_module(f"commands.{cmd[0:-3]}").setup(p)
-
 
     print("Type 'help' for help")
     while True:
         code = p.prompt()
-        if code == CommandCode.CONTINUE: continue
+        if code == CommandCode.CONTINUE:
+            continue
         elif code == CommandCode.EXIT:
             print("Thanks for using our software")
             break
@@ -146,5 +166,6 @@ def main():
         elif code == CommandCode.FORBIDDEN:
             print("You can't use that command")
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()

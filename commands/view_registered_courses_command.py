@@ -2,6 +2,7 @@ from command import Command, CommandCode
 from program import Program
 from colorama import Fore, Style
 
+
 class ViewRegisteredCommand(Command):
     def __init__(self):
         super().__init__()
@@ -22,6 +23,7 @@ class ViewRegisteredCommand(Command):
             print(course.id, course.name, end)
 
         return CommandCode.SUCCESS
+
 
 def setup(program):
     program.load_command(ViewRegisteredCommand())

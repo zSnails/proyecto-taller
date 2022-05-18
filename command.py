@@ -2,6 +2,7 @@ from typing import List
 from enum import Enum, auto
 from models import AccountRole
 
+
 class CommandCode(Enum):
     """
     The commandcode enum represents the different command exit codes that might occur
@@ -9,18 +10,19 @@ class CommandCode(Enum):
     on the type of code
     """
 
-    EXIT        = auto()
-    SUCCESS     = auto()
-    CONTINUE    = auto()
-    NOT_FOUND   = auto()
-    FORBIDDEN   = auto()
+    EXIT = auto()
+    SUCCESS = auto()
+    CONTINUE = auto()
+    NOT_FOUND = auto()
+    FORBIDDEN = auto()
+
 
 class Command:
     """
     The command class is just an interface for a command implementation and is not
     to be used other than inherit from it
     """
-    
+
     name: str
     aliases: List[str]
     description: str
@@ -29,7 +31,8 @@ class Command:
     def __init__(self):
         self.name = "default"
         self.aliases = []
-        # self.description = "Such a nice command!"
+        self.description = "Such a nice command!"
         self.required_role = AccountRole.STUDENT
 
-    def run(self) -> CommandCode: raise NotImplementedError
+    def run(self) -> CommandCode:
+        raise NotImplementedError

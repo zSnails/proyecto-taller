@@ -1,5 +1,6 @@
 from command import Command, CommandCode
 
+
 class ExitCommand(Command):
     def __init__(self):
         super().__init__()
@@ -9,6 +10,7 @@ class ExitCommand(Command):
 
     def run(self, ctx) -> CommandCode:
         return CommandCode.EXIT
+
 
 def setup(program) -> None:
     program.load_command(ExitCommand())

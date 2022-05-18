@@ -6,6 +6,7 @@ from colorama import Fore, Style
 from auth import Auth
 from json import JSONDecodeError
 
+
 class Program:
     def __init__(self, auth, manager, account):
         self.manager: Manager = manager
@@ -14,7 +15,6 @@ class Program:
         self.commands: Dict[str, Command] = {}
         self.aliases: Dict[str, Command] = {}
         self.auth: Auth = auth
-
 
     def get_command(self, name: str) -> Optional[Command]:
         """
@@ -68,16 +68,19 @@ class Program:
             - CommandCode: if the command lookup was unsucessful it returns a CommandCode.NOT_FOUND
         """
 
-
         user: str = self.user.name
         typ: str = self.user.role
 
         search_term: str = input(f"{Fore.CYAN}{user}{Style.RESET_ALL}::{typ}> ")
 
-        if not search_term: return CommandCode.CONTINUE
+        if not search_term:
+            return CommandCode.CONTINUE
 
         cmd: Command = self.get_command(search_term)
 
-        if not cmd: return CommandCode.NOT_FOUND
-        elif self.user.role < cmd.required_role: return CommandCode.FORBIDDEN
-        else: return cmd.run(self)
+        if not cmd:
+            return CommandCode.NOT_FOUND
+        elif self.user.role < cmd.required_role:
+            return CommandCode.FORBIDDEN
+        else:
+            return cmd.run(self)
