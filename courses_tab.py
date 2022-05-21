@@ -93,7 +93,7 @@ class CoursesTab(Frame):
             f"Name: {course.name}\n"
             f"Status: {'passed' if course.id in self.program.user.passed else 'not passed'}\n"
             f"Credits: {course.credits}\n"
-            f"Course hours: {course.course_hours}\n"
+            f"Course hours: {abs(course.course_hours)}\n"
             f"Weekly Hours: {course.weekly_hours}\n"
             f"Start Date: {course.start_date}\n"
             f"End Date: {course.end_date}"
@@ -144,6 +144,7 @@ class CoursesTab(Frame):
         def append_to_schedule():
             begin = datetime.strptime(begin_entry.get(), "%H:%M:%S")
             end = datetime.strptime(end_entry.get(), "%H:%M:%S")
+            print(selected_day.get())
 
             schedule.append((WeekDays[selected_day.get()], begin.time(), end.time()))
             self.weekly_hours += (end - begin).total_seconds() / 3600
