@@ -46,7 +46,9 @@ class Manager:
             for activity in data["activities"]:
                 self.activities.append(Activity(**activity))
 
-    def get_account(self, name: str = None, id: int = None) -> Optional[Account]:
+    def get_account(
+        self, name: str = None, id: int = None
+    ) -> Optional[Account]:
         """
         Returns an account that matches the specified data
 
@@ -61,6 +63,11 @@ class Manager:
                 return account
         return None
 
+    def get_course(self, name: str = None) -> Optional[Course]:
+        for course in self.courses:
+            if course.name == name:
+                return course
+
     def get_courses(self, career_id: int) -> List[Course]:
         """
         Returns a list containing all registered courses for the passed career
@@ -72,7 +79,9 @@ class Manager:
         -------
          - A list containing all registered courses available for the passed career
         """
-        return [course for course in self.courses if career_id in course.belongs_to]
+        return [
+            course for course in self.courses if career_id in course.belongs_to
+        ]
 
     def get_accounts(self) -> List[Account]:
         """
@@ -102,13 +111,22 @@ class Manager:
          - A list containing all accounts with an account type of STUDENT
         """
         return [
-            student for student in self.accounts if student._type == AccountRole.STUDENT
+            student
+            for student in self.accounts
+            if student._type == AccountRole.STUDENT
         ]
+
+    def get_activity(self, name=None, id=None):
+        for activity in self.activities:
+            if activity.name == name or activity.id == id:
+                return activity
 
     def get_activities(self):
         return self.activities
 
-    def get_student(self, name: str = None, id: int = None) -> Optional[Account]:
+    def get_student(
+        self, name: str = None, id: int = None
+    ) -> Optional[Account]:
         """
         Returns a user whose name or id are equal to either argument
 
@@ -138,9 +156,13 @@ class Manager:
         -------
          - A list containing all accounts with an account type of ADMIN
         """
-        return [admin for admin in self.accounts if admin._type == AccountRole.ADMIN]
+        return [
+            admin for admin in self.accounts if admin._type == AccountRole.ADMIN
+        ]
 
-    def get_admin(self, username: str = None, id: int = None) -> Optional[Account]:
+    def get_admin(
+        self, username: str = None, id: int = None
+    ) -> Optional[Account]:
         """
         Returns a user whose name or id are equal to either argument
 
@@ -192,7 +214,7 @@ class Manager:
 
     def get_account_courses(self, id=None, name=None) -> List[Course]:
         """
-        This method returns a list containig all registered courses on requested user
+        This method returns a list containig all registered courses on the requested user
 
         Both parameters are optional, but at least one must be provided
 
@@ -208,7 +230,9 @@ class Manager:
 
         usr = self.get_account(id=id, name=name)
         if usr:
-            return [course for course in self.courses if course.id in usr.courses]
+            return [
+                course for course in self.courses if course.id in usr.courses
+            ]
 
     def register_career(self, career: Career):
         """
@@ -272,7 +296,10 @@ class Manager:
         with open("data.json", "r", encoding="utf-8") as f:
             data = load(f)
             for account in data["accounts"]:
-                if account["id"] == account_id or account["name"] == account_name:
+                if (
+                    account["id"] == account_id
+                    or account["name"] == account_name
+                ):
                     account["courses"].append(course)
         with open("data.json", "w", encoding="utf-8") as f:
             dump(data, f, default=str)
@@ -300,7 +327,10 @@ class Manager:
         with open("data.json", "r", encoding="utf-8") as f:
             data = load(f)
             for account in data["accounts"]:
-                if account["id"] == account_id or account["name"] == account_name:
+                if (
+                    account["id"] == account_id
+                    or account["name"] == account_name
+                ):
                     account[status].append(int(course_id))
         with open("data.json", "w", encoding="utf-8") as f:
             dump(data, f)

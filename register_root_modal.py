@@ -28,6 +28,7 @@ def register_root_user_modal(manager, auth):
     modal_window = Tk()
     modal_window.wm_title("Register root user")
     modal_window.grid_rowconfigure(0, pad=5)
+    modal_window.protocol("WM_DELETE_WINDOW", exit)
     name_label = Label(modal_window, text="Username")
     name_label.grid(row=0, column=0)
     username = StringVar()
