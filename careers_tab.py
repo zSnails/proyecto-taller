@@ -1,7 +1,7 @@
 from tkinter.ttk import Frame, Button, OptionMenu, Label, Entry
 from tkinter import Text, StringVar, Tk
 from tkinter.messagebox import showinfo
-from models import Career
+from models import Career, AccountRole
 
 
 class CareersTab(Frame):
@@ -26,8 +26,9 @@ class CareersTab(Frame):
         self.selected = StringVar()
         self.available = OptionMenu(self, self.selected, *self.careers)
         self.available.grid(sticky="w", pady=4, padx=5)
-        self.new_button = Button(self, text="New", command=self.new_career)
-        self.new_button.grid(row=1, column=3)
+        if self.program.user.role == AccountRole.ADMIN:
+            self.new_button = Button(self, text="New", command=self.new_career)
+            self.new_button.grid(row=1, column=3)
 
         self.text_area = Text(self)
         self.text_area.configure(state="disabled")

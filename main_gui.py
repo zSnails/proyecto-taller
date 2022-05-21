@@ -27,7 +27,7 @@ def main():
     username = login_modal(auth)
     account = manager.get_account(name=username)
 
-    p = Program(auth, manager, account, tabs=[CoursesTab, CareersTab, ActivitiesTab])
+    p = Program(auth, manager, account, tabs=[CoursesTab, CareersTab, ActivitiesTab, UsersTab])
     p.run()
 
 

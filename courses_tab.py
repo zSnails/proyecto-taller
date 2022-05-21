@@ -5,6 +5,7 @@ from tkinter.messagebox import showinfo
 from functools import partialmethod
 from models import WeekDays, Course
 from datetime import datetime
+from models import AccountRole
 
 
 class CoursesTab(Frame):
@@ -25,10 +26,12 @@ class CoursesTab(Frame):
         self.seleccionado = StringVar()
         self.update_courses()
 
-        self.disponibles = OptionMenu(self, self.seleccionado, *self.courses)
+        self.disponibles = OptionMenu(self, self.seleccionado, "None", *self.courses)
         self.disponibles.grid(sticky="w", pady=4, padx=5)
-        self.new_button = Button(self, text="New", command=self.new_course_tab)
-        self.new_button.grid(row=1, column=3)
+
+        if self.program.user.role == AccountRole.ADMIN:
+            self.new_button = Button(self, text="New", command=self.new_course_tab)
+            self.new_button.grid(row=1, column=3)
 
         self.view_button = Button(self, text="View", command=self.show_data)
         self.view_button.grid(row=2, column=3)
@@ -43,7 +46,7 @@ class CoursesTab(Frame):
         )
 
     def update_courses(self):
-        self.courses = ["None"] + [
+        self.courses = [
             course.name
             for course in self.program.manager.get_account_courses(
                 id=self.program.user.id

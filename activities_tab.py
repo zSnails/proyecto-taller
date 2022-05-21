@@ -63,9 +63,7 @@ class ActivitiesTab(Frame):
         name_entry = Entry(modal)
         name_entry.grid(row=0, column=1)
 
-        description_label = Label(modal, text="Description").grid(
-            row=1, column=0
-        )
+        description_label = Label(modal, text="Description").grid(row=1, column=0)
         description_entry = Entry(modal)
         description_entry.grid(row=1, column=1)
 
@@ -76,7 +74,10 @@ class ActivitiesTab(Frame):
         available_courses.grid(row=2, column=1)
         [
             available_courses.insert("end", course.name)
-            for course in self.program.manager.get_courses(self.program.user.id)
+            for course in self.program.manager.get_courses(
+                career_id=self.program.user.career
+            )
+            if course.id in self.program.user.courses
         ]
 
         activity_date_label = Label(modal, text="Date").grid(row=3, column=0)
@@ -89,9 +90,7 @@ class ActivitiesTab(Frame):
         activity_start_time_entry = Entry(modal)
         activity_start_time_entry.grid(row=4, column=1)
 
-        activity_end_time_label = Label(modal, text="End time").grid(
-            row=5, column=0
-        )
+        activity_end_time_label = Label(modal, text="End time").grid(row=5, column=0)
         activity_end_time_entry = Entry(modal)
         activity_end_time_entry.grid(row=5, column=1)
 
@@ -117,14 +116,10 @@ class ActivitiesTab(Frame):
                     activity_end_time_entry.get(), "%H:%M:%S"
                 ).time(),
             )
-            self.program.manager.add_activity_to_user(
-                activity.id, self.program.user.id
-            )
+            self.program.manager.add_activity_to_user(activity.id, self.program.user.id)
             self.program.manager.register_activity(activity)
 
-        Button(modal, text="Register", command=register_activity).grid(
-            row=6, column=1
-        )
+        Button(modal, text="Register", command=register_activity).grid(row=6, column=1)
 
         self.update_activities()
         modal.mainloop()
