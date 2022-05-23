@@ -32,19 +32,24 @@ class Manager:
         self.careers = LinkedList()
         self.activities = LinkedList()
 
-        with open("data.json", "r", encoding="utf-8") as f:
-            data = load(f)
-            for account in data["accounts"]:
-                self.accounts.append(Account(**account))
+        try:
+            with open("./data.json", "r", encoding="utf-8") as f:
+                data = load(f)
+                for account in data["accounts"]:
+                    self.accounts.append(Account(**account))
 
-            for course in data["courses"]:
-                self.courses.append(Course(**course))
+                for course in data["courses"]:
+                    self.courses.append(Course(**course))
 
-            for career in data["careers"]:
-                self.careers.append(Career(**career))
+                for career in data["careers"]:
+                    self.careers.append(Career(**career))
 
-            for activity in data["activities"]:
-                self.activities.append(Activity(**activity))
+                for activity in data["activities"]:
+                    self.activities.append(Activity(**activity))
+        except FileNotFoundError:
+            open("./data.json", "x").close()
+            exit()  # still not the best practice but hey, as I said previously
+            # it gets the job done
 
     def get_account(
         self, name: str = None, id: int = None
