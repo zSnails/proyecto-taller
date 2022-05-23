@@ -5,6 +5,9 @@ from models import AccountRole, Account, ReportType
 
 
 class UsersTab(Frame):
+    """
+    The UsersTab class instantiates a tab in the main window
+    """
     def __init__(self, program):
         super().__init__()
         self.name = "Users"
@@ -13,6 +16,17 @@ class UsersTab(Frame):
         self.initUI()
 
     def initUI(self):
+        """
+        Initializes the main ui of the current tab
+
+        Parameters
+        ----------
+            -   None
+
+        Returns
+        -------
+            -   None
+        """
         self.pack(fill="both", expand=True)
 
         self.columnconfigure(1, weight=1)
@@ -43,6 +57,9 @@ class UsersTab(Frame):
         self.area.configure(state="disabled")
 
     def new_user(self):
+        """
+        User creation helper, creates a modal for user creation
+        """
         modal = Tk()
         modal.wm_title("Register user")
         name_label = Label(modal, text="Name").grid(row=0, column=0)
@@ -80,6 +97,9 @@ class UsersTab(Frame):
         course_menu.grid(row=6, column=1)
 
         def update_courses(*_):
+            """
+            Helper function for updating courses, meant for internal use
+            """
             career = self.program.manager.get_career(name=selected_career.get())
             course_menu.delete(0, "end")
             for course in self.program.manager.get_courses(career_id=career.id):
@@ -98,6 +118,9 @@ class UsersTab(Frame):
         selected_career.trace("w", update_courses)
 
         def register_user():
+            """
+            Helper function for user registration, meant for internal use
+            """
             career = self.program.manager.get_career(name=selected_career.get())
             if career:
                 courses = [
@@ -135,6 +158,9 @@ class UsersTab(Frame):
         modal.mainloop()
 
     def show_data(self):
+        """
+        Updates the main text area, meant for internal use
+        """
         user = self.program.manager.get_account(name=self.seleccionado.get())
         if not user:
             return

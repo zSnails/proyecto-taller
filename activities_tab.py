@@ -7,6 +7,9 @@ from models import Activity
 
 
 class ActivitiesTab(Frame):
+    """
+    The ActivitiesTab class instantiates a tab in the main window
+    """
     def __init__(self, program):
         super().__init__()
         self.name = "Activities"
@@ -14,6 +17,17 @@ class ActivitiesTab(Frame):
         self.initUI()
 
     def initUI(self):
+        """
+        Initializes the main ui of the current tab
+
+        Parameters
+        ----------
+            -   None
+
+        Returns
+        -------
+            -   None
+        """
         self.pack(fill="both", expand=True)
 
         self.columnconfigure(1, weight=1)
@@ -44,12 +58,18 @@ class ActivitiesTab(Frame):
         self.mark_button.grid(row=3, column=3)
 
     def update_activity_status(self):
+        """
+        Helper function for updating activitiy statuses, meant for internal
+        """
         activity = self.program.manager.get_activity(name=self.selected.get())
         if not activity:
             return
         self.program.manager.update_activity(activity.id)
 
     def update_activities(self):
+        """
+        Helper function for updating activities, meant for internal use
+        """
         self.activities = ["None"] + [
             activity.name
             for activity in self.program.manager.get_activities()
@@ -57,6 +77,9 @@ class ActivitiesTab(Frame):
         ]
 
     def new_activity(self):
+        """
+        Activity creation helper, creates a modal for user creation
+        """
         modal = Tk()
         modal.title("Register new activity")
         name_label = Label(modal, text="Name").grid(row=0, column=0)
@@ -95,6 +118,9 @@ class ActivitiesTab(Frame):
         activity_end_time_entry.grid(row=5, column=1)
 
         def register_activity():
+            """
+            Helper function for user registration, meant for internal use
+            """
             try:
                 course = self.program.manager.get_course(
                     available_courses.selection_get()
@@ -125,6 +151,9 @@ class ActivitiesTab(Frame):
         modal.mainloop()
 
     def view_activity(self):
+        """
+        Updates the main text area, meant for internal use
+        """
         activity = self.program.manager.get_activity(name=self.selected.get())
         if not activity:
             return

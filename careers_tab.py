@@ -12,6 +12,9 @@ class CareersTab(Frame):
         self.initUI()
 
     def initUI(self):
+        """
+        Initializes the current tab to be used in the main window
+        """
         self.pack(fill="both", expand=True)
 
         self.columnconfigure(1, weight=1)
@@ -39,10 +42,15 @@ class CareersTab(Frame):
         self.view_button = Button(self, text="View", command=self.view_career)
         self.view_button.grid(row=2, column=3)
 
-        self.switch_button = Button(self, text="Switch", command=self.switch_career)
+        self.switch_button = Button(
+            self, text="Switch", command=self.switch_career
+        )
         self.switch_button.grid(row=3, column=3)
 
     def view_career(self):
+        """
+        Updates the main textbox and shows relevant career info /s
+        """
         career = self.selected.get()
         self.text_area.configure(state="normal")
         self.text_area.delete(1.0, "end")
@@ -50,6 +58,9 @@ class CareersTab(Frame):
         self.text_area.configure(state="disabled")
 
     def switch_career(self):
+        """
+        This shows the career switching modal, nothing more
+        """
         modal = Tk()
         # available = [career.name for career in self.program.manager.careers]
         selected = StringVar()
@@ -61,6 +72,9 @@ class CareersTab(Frame):
         careers.grid(row=0, column=0)
 
         def switch_career():
+            """
+            Helper function for switching career, meant for internal use
+            """
             career = self.program.manager.get_career(selected.get())
 
             if not career:
@@ -69,11 +83,15 @@ class CareersTab(Frame):
             self.program.manager.switch_account_career(
                 account_id=self.program.user.id, career_id=career.id
             )
-            self.program.manager.reset_account_courses(account_id=self.program.user.id)
+            self.program.manager.reset_account_courses(
+                account_id=self.program.user.id
+            )
             self.program.user = self.program.manager.get_account(
                 id=self.program.user.id
             )
-            showinfo(title="Succes", message=f"Switched to career '{career.name}'")
+            showinfo(
+                title="Succes", message=f"Switched to career '{career.name}'"
+            )
             modal.destroy()
 
         switch_button = Button(modal, text="switch", command=switch_career)
@@ -82,6 +100,9 @@ class CareersTab(Frame):
         modal.mainloop()
 
     def new_career(self):
+        """
+        Creates and shows the career registration modal
+        """
         modal = Tk()
         modal.title("Register career")
 
@@ -90,6 +111,9 @@ class CareersTab(Frame):
         name_entry.grid(row=0, column=1, pady=5)
 
         def register_career():
+            """
+            Helper function for career registration, meant for internal use
+            """
 
             name = name_entry.get()
             if not name:

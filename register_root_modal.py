@@ -4,6 +4,10 @@ from models import Account, AccountRole
 
 
 def register(manager, auth, name, password, confirm, widget):
+    """
+    Root user registration function, registers a default user to be used whenever
+    there's noone registered in the auth database
+    """
     password = password.get()
     confirm = confirm.get()
 
@@ -25,6 +29,9 @@ def register(manager, auth, name, password, confirm, widget):
 
 
 def register_root_user_modal(manager, auth):
+    """
+    Creates and shows the user registration modal
+    """
     modal_window = Tk()
     modal_window.wm_title("Register root user")
     modal_window.grid_rowconfigure(0, pad=5)

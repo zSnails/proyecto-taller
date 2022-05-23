@@ -4,11 +4,19 @@ from models import Account, AccountRole
 
 
 def validate_user(widget, auth, name, passwd):
+    """
+    The validate user function validates the current user trying to login
+    Meant for internal use
+    """
     if auth.verify_account(name.get(), passwd.get()):
         widget.destroy()
 
 
 def login_modal(auth):
+    """
+    Creates and shows the login modal window
+    Meant for internal use
+    """
     modal_window = Tk()
     modal_window.wm_title("Login")
     modal_window.grid_rowconfigure(0, pad=5)
