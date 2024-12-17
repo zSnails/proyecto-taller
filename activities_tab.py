@@ -2,7 +2,7 @@ from tkinter import Tk, StringVar, Text, Listbox
 from tkinter.ttk import Label, Button, Entry, OptionMenu, Frame
 from arrow import get
 from datetime import datetime
-from tkcalendar import DateEntry
+from tkcalendar import DateEntry # type: ignore
 from models import Activity
 
 
@@ -83,15 +83,15 @@ class ActivitiesTab(Frame):
         """
         modal = Tk()
         modal.title("Register new activity")
-        name_label = Label(modal, text="Name").grid(row=0, column=0)
+        Label(modal, text="Name").grid(row=0, column=0)
         name_entry = Entry(modal)
         name_entry.grid(row=0, column=1)
 
-        description_label = Label(modal, text="Description").grid(row=1, column=0)
+        Label(modal, text="Description").grid(row=1, column=0)
         description_entry = Entry(modal)
         description_entry.grid(row=1, column=1)
 
-        course_select_label = Label(modal, text="Course to bind to").grid(
+        Label(modal, text="Course to bind to").grid(
             row=2, column=0
         )
         available_courses = Listbox(modal, selectmode="single")
@@ -104,17 +104,17 @@ class ActivitiesTab(Frame):
             if course.id in self.program.user.courses
         ]
 
-        activity_date_label = Label(modal, text="Date").grid(row=3, column=0)
+        Label(modal, text="Date").grid(row=3, column=0)
         activity_date_entry = DateEntry(modal)
         activity_date_entry.grid(row=3, column=1)
 
-        activity_start_time_label = Label(modal, text="Start time").grid(
+        Label(modal, text="Start time").grid(
             row=4, column=0
         )
         activity_start_time_entry = Entry(modal)
         activity_start_time_entry.grid(row=4, column=1)
 
-        activity_end_time_label = Label(modal, text="End time").grid(row=5, column=0)
+        Label(modal, text="End time").grid(row=5, column=0)
         activity_end_time_entry = Entry(modal)
         activity_end_time_entry.grid(row=5, column=1)
 

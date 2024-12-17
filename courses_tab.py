@@ -1,8 +1,7 @@
 from tkinter.ttk import Frame, Button, OptionMenu, Label, Entry
-from tkcalendar import DateEntry
+from tkcalendar import DateEntry # type: ignore
 from tkinter import Text, StringVar, Tk, Listbox
 from tkinter.messagebox import showinfo
-from functools import partialmethod
 from models import WeekDay, Course
 from datetime import datetime
 from models import AccountRole
