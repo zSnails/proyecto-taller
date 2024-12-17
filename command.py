@@ -17,7 +17,7 @@ class CommandCode(Enum):
     FORBIDDEN = auto()
 
 
-class Command:
+class Command[CTX]:
     """
     The command class is just an interface for a command implementation and is not
     to be used other than inherit from it
@@ -34,5 +34,5 @@ class Command:
         self.description = "Such a nice command!"
         self.required_role = AccountRole.STUDENT
 
-    def run(self) -> CommandCode:
+    def run(self, ctx: CTX) -> CommandCode:
         raise NotImplementedError
