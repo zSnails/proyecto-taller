@@ -17,8 +17,12 @@ class SwitchCareerCommand(Command):
 
         ctx.manager.switch_account_career(account_id=ctx.user.id, career_id=int(chosen))
         ctx.manager.reset_account_courses(account_id=ctx.user.id)
+        account = ctx.manager.get_account(id=ctx.user.id)
+        if not account:
+            return CommandCode.CONTINUE
 
-        ctx.user = ctx.manager.get_account(id=ctx.user.id)
+        ctx.user = account
+
         return CommandCode.SUCCESS
 
 

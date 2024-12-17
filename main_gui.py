@@ -15,6 +15,7 @@ from careers_tab import CareersTab
 from courses_tab import CoursesTab
 from activities_tab import ActivitiesTab
 
+
 def main():
     manager = Manager()
     auth = Auth()
@@ -27,7 +28,9 @@ def main():
     username = login_modal(auth)
     account = manager.get_account(name=username)
 
-    p = Program(auth, manager, account, tabs=[CoursesTab, CareersTab, ActivitiesTab, UsersTab])
+    p = Program(
+        auth, manager, account, tabs=[CoursesTab, CareersTab, ActivitiesTab, UsersTab]
+    )
     p.run()
 
 

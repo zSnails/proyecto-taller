@@ -11,9 +11,7 @@ class ChangeCourseStatusCommand(Command):
 
     def run(self, ctx: Program) -> CommandCode:
         print("====== Updating course status =======")
-        user_courses = [
-            course for course in ctx.manager.get_account_courses(id=ctx.user.id)
-        ]
+        user_courses = ctx.manager.get_account_courses(id=ctx.user.id)
 
         if not user_courses:
             print("You don't have any registered courses")
@@ -23,10 +21,12 @@ class ChangeCourseStatusCommand(Command):
             print(course.id, course.name)
 
         # TODO: toggle between passed or failed when one's already set
-        to_update = input("Enter course id ('cancel' to abort)> ")
-        if to_update.lower() == "cancel":
+        _to_update = input("Enter course id ('cancel' to abort)> ")
+        if _to_update.lower() == "cancel":
             return CommandCode.CONTINUE
         new_status = input("Enter new status> ")
+
+        to_update = int(_to_update)
 
         ctx.manager.update_user_course_status(
             new_status, course_id=to_update, account_id=ctx.user.id

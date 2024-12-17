@@ -1,6 +1,7 @@
+from typing import List
 from command import Command, CommandCode
-from models import Course, AccountRole, WeekDays
-from datetime import timedelta, datetime, time, date
+from models import Course, AccountRole, WeekDay
+from datetime import datetime
 from program import Program
 
 
@@ -17,39 +18,39 @@ class RegisterCourseCommand(Command):
         name = input("Course name> ")
         _credits = int(input("Course credits> "))
 
-        start_date = input("Start date (yyyy-mm-dd)> ")
-        start_date = datetime.strptime(start_date, "%Y-%m-%d")
+        _start_date = input("Start date (yyyy-mm-dd)> ")
+        start_date = datetime.strptime(_start_date, "%Y-%m-%d")
 
-        end_date = input("End date (yyyy-mm-dd)> ")
-        end_date = datetime.strptime(end_date, "%Y-%m-%d")
+        _end_date = input("End date (yyyy-mm-dd)> ")
+        end_date = datetime.strptime(_end_date, "%Y-%m-%d")
 
         course_duration = end_date - start_date
 
         # TODO: add which career this belongs to (can belong to many careers)
 
-        course_hours = 0
-        weekly_hours = 0
+        course_hours: float = 0.0
+        weekly_hours: float = 0.0
         schedule = []
         print("=== Set schedule ===")
         while True:
-            for idx, weekday in enumerate(WeekDays):
+            for idx, weekday in enumerate(WeekDay):
                 print(idx + 1, str(weekday).split(".").pop())
-            day = input("Class day (enter day number) ('done' when finished)> ")
-            if day == "done":
+            _day = input("Class day (enter day number) ('done' when finished)> ")
+            if _day == "done":
                 break
-            begin = input("Start hour (h:m:s)> ")
-            end = input("End hour (h:m:s)> ")
+            _begin = input("Start hour (h:m:s)> ")
+            _end = input("End hour (h:m:s)> ")
 
-            day = WeekDays(int(day))
-            begin = datetime.strptime(begin, "%H:%M:%S")
-            end = datetime.strptime(end, "%H:%M:%S")
+            day = WeekDay(int(_day))
+            begin = datetime.strptime(_begin, "%H:%M:%S")
+            end = datetime.strptime(_end, "%H:%M:%S")
             schedule.append((day, begin.time(), end.time()))
             weekly_hours += (end - begin).total_seconds() / 3600
 
         # course duration in hours
         course_hours = (course_duration.days // 30) * (weekly_hours * 4)
 
-        available_careers = []
+        available_careers: List[int] = []
         all_careers = ctx.manager.get_careers()
         for career in all_careers:
             print(career.id, career.name)
@@ -69,15 +70,17 @@ class RegisterCourseCommand(Command):
             id=len(ctx.manager.courses) + 1,
             name=name,
             credits=_credits,
-            course_hours=course_hours,
+            course_hours=int(course_hours),
             start_date=start_date,
             end_date=end_date,
             schedule=schedule,
             belongs_to=available_careers,
-            weekly_hours=weekly_hours,
+            weekly_hours=int(weekly_hours),
         )
 
         ctx.manager.register_course(course)
+
+        return CommandCode.SUCCESS
 
 
 def setup(program) -> None:

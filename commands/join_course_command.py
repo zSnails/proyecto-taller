@@ -1,5 +1,14 @@
+from typing import Callable
 from command import Command, CommandCode
+from models import Course
 from program import Program
+
+
+def course_filter(id: int) -> Callable[[Course], bool]:
+    def the_filter(course: Course) -> bool:
+        return course.id == id
+
+    return the_filter
 
 
 class JoinCourseCommand(Command):
@@ -22,19 +31,25 @@ class JoinCourseCommand(Command):
         for course in available_courses:
             print(course.id, course.name)
 
-        to_join = input("Course to join ('cancel' to abort)> ")
+        _to_join = input("Course to join ('cancel' to abort)> ")
 
-        if to_join.lower() == "cancel":
+        if _to_join.lower() == "cancel":
             return CommandCode.CONTINUE
 
-        to_join = int(to_join)
+        to_join = int(_to_join)
 
         if to_join in ctx.user.courses:
             print("You already got that course!")
             return CommandCode.CONTINUE
 
-        ctx.manager.update_account_courses(to_join, account_id=ctx.user.id)
-        ctx.user = ctx.manager.get_account(id=ctx.user.id)
+        course_to_join: Course = list(
+            filter(course_filter(to_join), available_courses)
+        )[0]
+        ctx.manager.update_account_courses(course_to_join, account_id=ctx.user.id)
+        user = ctx.manager.get_account(id=ctx.user.id)
+        if not user:
+            return CommandCode.CONTINUE
+        ctx.user = user
         return CommandCode.SUCCESS
 
 

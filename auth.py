@@ -3,6 +3,7 @@ from secrets import token_hex
 from hashlib import sha256
 from json import load, dump, JSONDecodeError
 
+
 # NOTE: use a database such as mysql or mongo to store data
 class Auth:
     """

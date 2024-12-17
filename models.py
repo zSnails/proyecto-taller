@@ -1,10 +1,10 @@
-from pydantic import BaseModel, ValidationError
+from pydantic import BaseModel
 from enum import IntEnum, auto
 from datetime import date, time
-from typing import List, Tuple, Optional
+from typing import List, Tuple, Optional, Self, Generator
 
 
-class LinkedList:
+class LinkedList[T]:
     def __init__(self):
         self.head = None
         self.length = 0
@@ -24,7 +24,7 @@ class LinkedList:
         current.next = data
         self.length += 1
 
-    def __iter__(self) -> "Node":
+    def __iter__(self) -> Generator[T, None, None]:
         curr = self.head
         while curr:
             yield curr

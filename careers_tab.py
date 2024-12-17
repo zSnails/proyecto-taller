@@ -42,9 +42,7 @@ class CareersTab(Frame):
         self.view_button = Button(self, text="View", command=self.view_career)
         self.view_button.grid(row=2, column=3)
 
-        self.switch_button = Button(
-            self, text="Switch", command=self.switch_career
-        )
+        self.switch_button = Button(self, text="Switch", command=self.switch_career)
         self.switch_button.grid(row=3, column=3)
 
     def view_career(self):
@@ -83,15 +81,11 @@ class CareersTab(Frame):
             self.program.manager.switch_account_career(
                 account_id=self.program.user.id, career_id=career.id
             )
-            self.program.manager.reset_account_courses(
-                account_id=self.program.user.id
-            )
+            self.program.manager.reset_account_courses(account_id=self.program.user.id)
             self.program.user = self.program.manager.get_account(
                 id=self.program.user.id
             )
-            showinfo(
-                title="Succes", message=f"Switched to career '{career.name}'"
-            )
+            showinfo(title="Succes", message=f"Switched to career '{career.name}'")
             modal.destroy()
 
         switch_button = Button(modal, text="switch", command=switch_career)

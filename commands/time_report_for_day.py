@@ -3,6 +3,7 @@ from program import Program
 from datetime import datetime
 from arrow import get
 
+
 # import arrow
 class TimeReportForDayCommand(Command):
     def __init__(self):

@@ -3,7 +3,7 @@ from tkcalendar import DateEntry
 from tkinter import Text, StringVar, Tk, Listbox
 from tkinter.messagebox import showinfo
 from functools import partialmethod
-from models import WeekDays, Course
+from models import WeekDay, Course
 from datetime import datetime
 from models import AccountRole
 
@@ -29,23 +29,17 @@ class CoursesTab(Frame):
         self.seleccionado = StringVar()
         self.update_courses()
 
-        self.disponibles = OptionMenu(
-            self, self.seleccionado, "None", *self.courses
-        )
+        self.disponibles = OptionMenu(self, self.seleccionado, "None", *self.courses)
         self.disponibles.grid(sticky="w", pady=4, padx=5)
 
         if self.program.user.role == AccountRole.ADMIN:
-            self.new_button = Button(
-                self, text="New", command=self.new_course_tab
-            )
+            self.new_button = Button(self, text="New", command=self.new_course_tab)
             self.new_button.grid(row=1, column=3)
 
         self.view_button = Button(self, text="View", command=self.show_data)
         self.view_button.grid(row=2, column=3)
 
-        self.btn_join = Button(
-            self, text="Join Course", command=self.join_course
-        )
+        self.btn_join = Button(self, text="Join Course", command=self.join_course)
         self.btn_join.grid(row=3, column=3)
 
         self.text_area = Text(self)
@@ -72,9 +66,7 @@ class CoursesTab(Frame):
         modal = Tk()
         available_courses = [
             f"{course.name}"
-            for course in self.program.manager.get_courses(
-                self.program.user.career
-            )
+            for course in self.program.manager.get_courses(self.program.user.career)
             if course.id not in self.program.user.courses
         ]
         selected = StringVar()
@@ -138,9 +130,7 @@ class CoursesTab(Frame):
         name_entry = Entry(modal)
         name_entry.grid(row=0, column=1)
 
-        credits_label = Label(modal, text="Course credits").grid(
-            row=1, column=0
-        )
+        credits_label = Label(modal, text="Course credits").grid(row=1, column=0)
         credits_entry = Entry(modal)
         credits_entry.grid(row=1, column=1)
 
@@ -155,9 +145,7 @@ class CoursesTab(Frame):
         schedule = []
         course_hours = 0
         self.weekly_hours = 0
-        weekdays_list = ["None"] + [
-            str(day).split(".").pop() for day in WeekDays
-        ]
+        weekdays_list = ["None"] + [str(day).split(".").pop() for day in WeekDay]
         selected_day = StringVar()
         days_listbox = OptionMenu(modal, selected_day, *weekdays_list)
         days_listbox.grid(row=4, column=1)
@@ -168,9 +156,7 @@ class CoursesTab(Frame):
         begin_entry = Entry(modal)
         begin_entry.grid(row=5, column=1)
 
-        end_label = Label(modal, text="End hour (h:m:s format)").grid(
-            row=6, column=0
-        )
+        end_label = Label(modal, text="End hour (h:m:s format)").grid(row=6, column=0)
         end_entry = Entry(modal)
         end_entry.grid(row=6, column=1)
 
@@ -182,9 +168,7 @@ class CoursesTab(Frame):
             end = datetime.strptime(end_entry.get(), "%H:%M:%S")
             print(selected_day.get())
 
-            schedule.append(
-                (WeekDays[selected_day.get()], begin.time(), end.time())
-            )
+            schedule.append((WeekDay[selected_day.get()], begin.time(), end.time()))
             self.weekly_hours += (end - begin).total_seconds() / 3600
 
         append_schedule_button = Button(
@@ -200,10 +184,7 @@ class CoursesTab(Frame):
         self.all_careers = self.program.manager.get_careers()
         career_selector = Listbox(modal, selectmode="multiple")
         career_selector.grid(row=8, column=1)
-        [
-            career_selector.insert("end", career.name)
-            for career in self.all_careers
-        ]
+        [career_selector.insert("end", career.name) for career in self.all_careers]
 
         def register_course():
             """
@@ -218,9 +199,7 @@ class CoursesTab(Frame):
             course_duration = (
                 start_date_calendar.get_date() - end_date_calendar.get_date()
             )
-            course_hours = (course_duration.days // 30) * (
-                self.weekly_hours * 4
-            )
+            course_hours = (course_duration.days // 30) * (self.weekly_hours * 4)
             course = Course(
                 id=len(self.program.manager.courses) + 1,
                 name=name_entry.get(),
@@ -237,9 +216,7 @@ class CoursesTab(Frame):
             self.update_courses()
             modal.destroy()
 
-        register_button = Button(
-            modal, text="Register", command=register_course
-        )
+        register_button = Button(modal, text="Register", command=register_course)
         register_button.grid(row=9, column=1)
 
         modal.mainloop()

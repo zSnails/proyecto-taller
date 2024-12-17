@@ -8,6 +8,7 @@ class UsersTab(Frame):
     """
     The UsersTab class instantiates a tab in the main window
     """
+
     def __init__(self, program):
         super().__init__()
         self.name = "Users"
@@ -51,9 +52,7 @@ class UsersTab(Frame):
         self.btn_ver.grid(row=2, column=3)
 
         self.area = Text(self)
-        self.area.grid(
-            row=1, column=0, columnspan=2, rowspan=4, padx=5, sticky="ewsn"
-        )
+        self.area.grid(row=1, column=0, columnspan=2, rowspan=4, padx=5, sticky="ewsn")
         self.area.configure(state="disabled")
 
     def new_user(self):
@@ -68,16 +67,12 @@ class UsersTab(Frame):
 
         role_label = Label(modal, text="Role").grid(row=1, column=0)
         selected_role = StringVar()
-        role_menu = OptionMenu(
-            modal, selected_role, "Admin", "Admin", "Student"
-        )
+        role_menu = OptionMenu(modal, selected_role, "Admin", "Admin", "Student")
         role_menu.grid(row=1, column=1)
 
         selected_report = StringVar()
         report_label = Label(modal, text="Report type").grid(row=3, column=0)
-        report_menu = OptionMenu(
-            modal, selected_report, "Daily", "Daily", "Weekly"
-        )
+        report_menu = OptionMenu(modal, selected_report, "Daily", "Daily", "Weekly")
         report_menu.grid(row=3, column=1)
 
         phone_number_label = Label(modal, text="Phone number (optional)").grid(
@@ -109,9 +104,7 @@ class UsersTab(Frame):
         password_entry = Entry(modal)
         password_entry.grid(row=7, column=1)
 
-        _pass_label = Label(modal, text="Confirm password").grid(
-            row=8, column=0
-        )
+        _pass_label = Label(modal, text="Confirm password").grid(row=8, column=0)
         _pass_entry = Entry(modal)
         _pass_entry.grid(row=8, column=1)
 
@@ -125,9 +118,7 @@ class UsersTab(Frame):
             if career:
                 courses = [
                     course.id
-                    for course in self.program.manager.get_courses(
-                        career_id=career.id
-                    )
+                    for course in self.program.manager.get_courses(career_id=career.id)
                     if course.name in course_menu.selection_get().split("\n")
                 ]
 
@@ -152,9 +143,7 @@ class UsersTab(Frame):
             self.program.auth.store_password(usr.name, password_entry.get())
             modal.destroy()
 
-        Button(modal, text="Register", command=register_user).grid(
-            row=9, column=1
-        )
+        Button(modal, text="Register", command=register_user).grid(row=9, column=1)
         modal.mainloop()
 
     def show_data(self):

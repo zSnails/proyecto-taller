@@ -2,6 +2,7 @@ from command import Command, CommandCode
 from program import Program
 from models import Activity
 from datetime import datetime
+from typing import Optional
 
 
 class RegisterActivityCommand(Command):
@@ -18,8 +19,9 @@ class RegisterActivityCommand(Command):
         name = input("Enter activity name> ")
         description = input("Enter activity description> ")
 
-        course = input("Bind to course?> (y/n)> ")
-        if course == "y":
+        _course = input("Bind to course?> (y/n)> ")
+        course: Optional[int] = 0
+        if _course == "y":
             for c in ctx.manager.get_courses(ctx.user.career):
                 print(c.id, c.name)
             course = int(input("Enter course id> "))
@@ -29,15 +31,15 @@ class RegisterActivityCommand(Command):
         else:
             course = None
 
-        activity_date = input("Enter start date (yyyy-mm-dd)> ")
-        activity_date = datetime.strptime(activity_date, "%Y-%m-%d")
+        _activity_date = input("Enter start date (yyyy-mm-dd)> ")
+        activity_date = datetime.strptime(_activity_date, "%Y-%m-%d")
 
         # activity_duration = (end_date - start_date)
-        begin_time = input("Start hour (h:m:s)> ")
-        end_time = input("End hour (h:m:s)> ")
+        _begin_time = input("Start hour (h:m:s)> ")
+        _end_time = input("End hour (h:m:s)> ")
 
-        begin_time = datetime.strptime(begin_time, "%H:%M:%S")
-        end_time = datetime.strptime(end_time, "%H:%M:%S")
+        begin_time = datetime.strptime(_begin_time, "%H:%M:%S")
+        end_time = datetime.strptime(_end_time, "%H:%M:%S")
 
         # total_weekly_hours refers to the total amount of work hours for the current week
         total_weekly_hours = 0

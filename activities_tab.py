@@ -10,6 +10,7 @@ class ActivitiesTab(Frame):
     """
     The ActivitiesTab class instantiates a tab in the main window
     """
+
     def __init__(self, program):
         super().__init__()
         self.name = "Activities"

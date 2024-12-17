@@ -1,6 +1,6 @@
 from command import Command, CommandCode
 from program import Program
-from colorama import Fore, Style
+from colorama import Fore, Style  # type: ignore
 
 
 class ShowProfileCommand(Command):
@@ -28,7 +28,8 @@ class ShowProfileCommand(Command):
 
         career = ctx.manager.get_career(id=ctx.user.career)
 
-        print(f"{Fore.BLUE}Career{Style.RESET_ALL}: {career.name}")
+        if career:
+            print(f"{Fore.BLUE}Career{Style.RESET_ALL}: {career.name}")
 
         courses = ctx.manager.get_courses(career_id=ctx.user.career)
         print(f"{Fore.MAGENTA}Courses{Style.RESET_ALL}:")

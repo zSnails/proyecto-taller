@@ -11,8 +11,10 @@ class ViewRegisteredCommand(Command):
         self.description = "Shows a list of registered courses"
 
     def run(self, ctx: Program) -> CommandCode:
-        for course in ctx.manager.get_account_courses(id=ctx.user.id):
-
+        courses = ctx.manager.get_account_courses(id=ctx.user.id)
+        if not courses:
+            return CommandCode.CONTINUE
+        for course in courses:
             end = ""
 
             if course.id in ctx.user.passed:

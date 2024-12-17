@@ -1,5 +1,5 @@
 from models import Career, Course, Account, AccountRole, Activity, LinkedList
-from typing import List, Dict, Optional, Literal
+from typing import List, Optional
 from json import load, dump
 
 
@@ -18,7 +18,7 @@ class Manager:
     def __init__(self):
         self._load_db()
 
-    def _load_db(self):
+    def _load_db(self) -> None:
         """
         The _load_db function updates the current state of the programs data
         it also resets all the data to update it
@@ -27,10 +27,10 @@ class Manager:
         -------
             -    None
         """
-        self.accounts = LinkedList()
-        self.courses = LinkedList()
-        self.careers = LinkedList()
-        self.activities = LinkedList()
+        self.accounts: LinkedList[Account] = LinkedList()
+        self.courses: LinkedList[Course] = LinkedList()
+        self.careers: LinkedList[Career] = LinkedList()
+        self.activities: LinkedList[Activity] = LinkedList()
 
         try:
             with open("./data.json", "r", encoding="utf-8") as f:
@@ -52,7 +52,7 @@ class Manager:
             # it gets the job done
 
     def get_account(
-        self, name: str = None, id: int = None
+        self, name: Optional[str] = None, id: Optional[int] = None
     ) -> Optional[Account]:
         """
         Returns an account that matches the specified data
@@ -68,10 +68,11 @@ class Manager:
                 return account
         return None
 
-    def get_course(self, name: str = None) -> Optional[Course]:
+    def get_course(self, name: Optional[str] = None) -> Optional[Course]:
         for course in self.courses:
             if course.name == name:
                 return course
+        return None
 
     def get_courses(self, career_id: int) -> List[Course]:
         """
@@ -84,11 +85,9 @@ class Manager:
         -------
          - A list containing all registered courses available for the passed career
         """
-        return [
-            course for course in self.courses if career_id in course.belongs_to
-        ]
+        return [course for course in self.courses if career_id in course.belongs_to]
 
-    def get_accounts(self) -> List[Account]:
+    def get_accounts(self) -> LinkedList[Account]:
         """
         Returns a list containing all registered accounts, including students
         and admin accounts
@@ -116,9 +115,7 @@ class Manager:
          - A list containing all accounts with an account type of STUDENT
         """
         return [
-            student
-            for student in self.accounts
-            if student._type == AccountRole.STUDENT
+            student for student in self.accounts if student.role == AccountRole.STUDENT
         ]
 
     def get_activity(self, name=None, id=None):
@@ -130,7 +127,7 @@ class Manager:
         return self.activities
 
     def get_student(
-        self, name: str = None, id: int = None
+        self, name: Optional[str] = None, id: Optional[int] = None
     ) -> Optional[Account]:
         """
         Returns a user whose name or id are equal to either argument
@@ -161,12 +158,10 @@ class Manager:
         -------
          - A list containing all accounts with an account type of ADMIN
         """
-        return [
-            admin for admin in self.accounts if admin._type == AccountRole.ADMIN
-        ]
+        return [admin for admin in self.accounts if admin.role == AccountRole.ADMIN]
 
     def get_admin(
-        self, username: str = None, id: int = None
+        self, username: Optional[str] = None, id: Optional[int] = None
     ) -> Optional[Account]:
         """
         Returns a user whose name or id are equal to either argument
@@ -183,8 +178,9 @@ class Manager:
         for admin in self.get_admins():
             if admin.name == username or admin.id == id:
                 return admin
+        return None
 
-    def get_careers(self) -> List[Career]:
+    def get_careers(self) -> LinkedList[Career]:
         """
         Returns a list containing all registered careers
 
@@ -198,7 +194,9 @@ class Manager:
         """
         return self.careers
 
-    def get_career(self, name: str = None, id: int = None) -> Career:
+    def get_career(
+        self, name: Optional[str] = None, id: Optional[int] = None
+    ) -> Optional[Career]:
         """
         The get career method returns a career based on either its id or name
 
@@ -216,8 +214,9 @@ class Manager:
         for career in self.careers:
             if career.name == name or career.id == id:
                 return career
+        return None
 
-    def get_account_courses(self, id=None, name=None) -> List[Course]:
+    def get_account_courses(self, id=None, name=None) -> Optional[List[Course]]:
         """
         This method returns a list containig all registered courses on the requested user
 
@@ -235,9 +234,9 @@ class Manager:
 
         usr = self.get_account(id=id, name=name)
         if usr:
-            return [
-                course for course in self.courses if course.id in usr.courses
-            ]
+            return [course for course in self.courses if course.id in usr.courses]
+
+        return None
 
     def register_career(self, career: Career):
         """
@@ -252,14 +251,14 @@ class Manager:
         """
         with open("data.json", "r", encoding="utf-8") as f:
             data = load(f)
-            data["careers"].append(career.dict())
+            data["careers"].append(career.model_dump())
 
         with open("data.json", "w", encoding="utf-8") as f:
             dump(data, f)
 
         self._load_db()
 
-    def register_user(self, user: Account) -> Optional[bool]:
+    def register_user(self, user: Account):
         """
         Registers a new user to the 'data' database
 
@@ -274,7 +273,7 @@ class Manager:
 
         with open("data.json", "r", encoding="utf-8") as f:
             data = load(f)
-            data["accounts"].append(user.dict())
+            data["accounts"].append(user.model_dump())
 
         with open("data.json", "w", encoding="utf-8") as f:
             dump(data, f)
@@ -301,10 +300,7 @@ class Manager:
         with open("data.json", "r", encoding="utf-8") as f:
             data = load(f)
             for account in data["accounts"]:
-                if (
-                    account["id"] == account_id
-                    or account["name"] == account_name
-                ):
+                if account["id"] == account_id or account["name"] == account_name:
                     account["courses"].append(course)
         with open("data.json", "w", encoding="utf-8") as f:
             dump(data, f, default=str)
@@ -312,7 +308,11 @@ class Manager:
         self._load_db()
 
     def update_user_course_status(
-        self, status: str, course_id=None, account_id=None, account_name=None
+        self,
+        status: str,
+        course_id: int,
+        account_id: Optional[int] = None,
+        account_name: Optional[str] = None,
     ):
         """
         This method updated the current status of a specific course on a specific user
@@ -332,11 +332,8 @@ class Manager:
         with open("data.json", "r", encoding="utf-8") as f:
             data = load(f)
             for account in data["accounts"]:
-                if (
-                    account["id"] == account_id
-                    or account["name"] == account_name
-                ):
-                    account[status].append(int(course_id))
+                if account["id"] == account_id or account["name"] == account_name:
+                    account[status].append(course_id)
         with open("data.json", "w", encoding="utf-8") as f:
             dump(data, f)
 
@@ -356,7 +353,7 @@ class Manager:
         """
         with open("data.json", "r", encoding="utf-8") as f:
             data = load(f)
-            data["courses"].append(course.dict())
+            data["courses"].append(course.model_dump())
 
         with open("data.json", "w", encoding="utf-8") as f:
             dump(data, f, default=str)
@@ -376,7 +373,7 @@ class Manager:
         """
         with open("data.json", "r", encoding="utf-8") as f:
             data = load(f)
-            data["activities"].append(activity.dict())
+            data["activities"].append(activity.model_dump())
         with open("data.json", "w", encoding="utf-8") as f:
             dump(data, f, default=str)
 

@@ -1,14 +1,13 @@
 from command import Command, CommandCode
-from typing import Optional, List, Union, Dict
-from models import Account
+from typing import Optional, Union, Dict
+from models import Account, AccountRole
 from manager import Manager
-from colorama import Fore, Style
+from colorama import Fore, Style  # type: ignore
 from auth import Auth
-from json import JSONDecodeError
 
 
 class Program:
-    def __init__(self, auth, manager, account):
+    def __init__(self, auth: Auth, manager: Manager, account: Account) -> None:
         self.manager: Manager = manager
         # TODO: fix logging before initialization
         self.user: Account = account
@@ -69,14 +68,14 @@ class Program:
         """
 
         user: str = self.user.name
-        typ: str = self.user.role
+        typ: AccountRole = self.user.role
 
         search_term: str = input(f"{Fore.CYAN}{user}{Style.RESET_ALL}::{typ}> ")
 
         if not search_term:
             return CommandCode.CONTINUE
 
-        cmd: Command = self.get_command(search_term)
+        cmd: Optional[Command] = self.get_command(search_term)
 
         if not cmd:
             return CommandCode.NOT_FOUND
