@@ -39,13 +39,13 @@ class Career(BaseModel):
 
     id: int
     name: str
-    next: Optional["Career"] = None
+    next: Optional[Self] = None
 
 
-Career.update_forward_refs()
+Career.model_rebuild()
 
 
-class WeekDays(IntEnum):
+class WeekDay(IntEnum):
     """
     The weekdays enum represents each day of the week with MONDAY being = 1 and SUNDAY = 7
     """
@@ -81,13 +81,13 @@ class Course(BaseModel):
     weekly_hours: int
     start_date: date
     end_date: date
-    schedule: List[Tuple[int, time, time]]
+    schedule: List[Tuple[WeekDay, time, time]]
     belongs_to: List[int]
     next: Optional["Course"] = None
 
 
 # Needed to prevent field 'x' not yet prepared so type is still a forward ref
-Course.update_forward_refs()
+Course.model_rebuild()
 
 
 class AccountRole(IntEnum):
@@ -121,7 +121,7 @@ class Account(BaseModel):
 
 
 # Needed to prevent field 'x' not yet prepared so type is still a forward ref
-Account.update_forward_refs()
+Account.model_rebuild()
 
 
 class Activity(BaseModel):
@@ -142,4 +142,4 @@ class Activity(BaseModel):
     next: Optional["Activity"] = None
 
 
-Activity.update_forward_refs()
+Activity.model_rebuild()
