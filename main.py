@@ -6,7 +6,6 @@ from manager import Manager
 from getpass import getpass
 from os import listdir
 from importlib import import_module
-from json import JSONDecodeError
 from datetime import datetime, timedelta
 from arrow import get
 from colorama import Fore, Style
@@ -121,36 +120,35 @@ def main():
         print("user_account is None", file=stderr)
         return
 
-    p = Program(auth, manager, user_account)
+    program = Program(auth, manager, user_account)
 
     if datetime.today().weekday() == 0 and user_account.reports == ReportType.WEEKLY:
         monday = datetime.today()
         friday = monday + timedelta(days=5)
         activities = [
-            a
-            for a in manager.activities
-            if monday.date() <= a.activity_date
-            and a.activity_date <= friday.date()
-            and a.belongs_to == user_account.id
+            activity
+            for activity in manager.activities
+            if monday.date() <= activity.activity_date
+            and activity.activity_date <= friday.date()
+            and activity.belongs_to == user_account.id
         ]
-        courses = [c for c in manager.courses if c.id in user_account.courses]
+        courses = [course for course in manager.courses if course.id in user_account.courses]
         print("Weekly report - Activities for this week:")
         print_activities(activities, courses)
 
     elif user_account.reports == ReportType.DAILY:
         activities = [
-            a
-            for a in manager.activities
-            if a.activity_date == datetime.today().date()
-            and a.belongs_to == user_account.id
+            activity
+            for activity in manager.activities
+            if activity.activity_date == datetime.today().date()
+            and activity.belongs_to == user_account.id
         ]
         courses = [
-            c
-            for c in manager.courses
-            if c.schedule[0][0] == datetime.today().weekday() + 1
-            and c.id in user_account.courses
+            course
+            for course in manager.courses
+            if course.schedule[0][0] == datetime.today().weekday() + 1
+            and course.id in user_account.courses
         ]
-        # print(courses)
         print("Daily report - Activities for today:")
         print_activities(activities, courses)
 
@@ -158,11 +156,11 @@ def main():
     for cmd in command_modules:
         if cmd in ("__init__.py", "__pycache__"):
             continue
-        import_module(f"commands.{cmd[0:-3]}").setup(p)
+        import_module(f"commands.{cmd[0:-3]}").setup(program)
 
     print("Type 'help' for help")
     while True:
-        code = p.prompt()
+        code = program.prompt()
         if code == CommandCode.CONTINUE:
             continue
         elif code == CommandCode.EXIT:
