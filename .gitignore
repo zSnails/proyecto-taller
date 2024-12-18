@@ -4,3 +4,4 @@ bootstrap.py
 docs
 *.db
 *.txt
+*.pdf
