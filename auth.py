@@ -35,7 +35,7 @@ class Auth:
         """
         self.auth_data = {}
 
-    def load_data(self):
+    def load_data(self) -> bool:
         """
         The load data function loads auth data to memory, the loaded data is stored
         in the `auth_data` property
@@ -43,9 +43,11 @@ class Auth:
         try:
             with open("./auth.json", "r", encoding="utf-8") as f:
                 self.auth_data = load(f)
+            return True
         except FileNotFoundError:
-            open("./auth.json", "x").close()
-            exit()  # not the best practice but hey, it gets the job done
+            with open("./auth.json", "x") as auth:
+                auth.write("{}")
+            return False
 
     def check_existence(self, username: str) -> bool:
         """

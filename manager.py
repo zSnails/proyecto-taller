@@ -47,7 +47,8 @@ class Manager:
                 for activity in data["activities"]:
                     self.activities.append(Activity(**activity))
         except FileNotFoundError:
-            open("./data.json", "x").close()
+            with open("./data.json", "x") as data:
+                data.write('''{"accounts":[],"courses":[],"careers":[],"activities":[]}''')
             exit()  # still not the best practice but hey, as I said previously
             # it gets the job done
 

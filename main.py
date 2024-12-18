@@ -1,3 +1,4 @@
+from sys import stderr
 from program import Program, CommandCode
 from auth import Auth
 from models import Account, AccountRole, ReportType
@@ -11,7 +12,7 @@ from arrow import get
 from colorama import Fore, Style
 
 
-def register_admin_user(manager, auth):
+def register_admin_user(manager: Manager, auth: Auth) -> None:
     """
     The register admin user function allows the program to register the main
     administrator user
@@ -36,7 +37,7 @@ def register_admin_user(manager, auth):
         courses=[],
         passed=[],
         failed=[],
-        reports=1,
+        reports=ReportType.DAILY,
         activities=[],
     )
 
@@ -99,20 +100,26 @@ def main():
     # Manage system login
     manager = Manager()
     auth = Auth()
-    try:
-        auth.load_data()
-    except JSONDecodeError:
+    if not auth.load_data():
         register_admin_user(manager, auth)
 
     is_valid = False
 
+    username = ""
+    password = ""
     while not is_valid:
         # username and password will live after this block
         username = input("Username> ")
         password = getpass("Password> ")
         is_valid = auth.verify_account(username, password)
+        if not is_valid:
+            print("invalid credentials", file=stderr)
 
     user_account = manager.get_account(name=username)
+
+    if not user_account:
+        print("user_account is None", file=stderr)
+        return
 
     p = Program(auth, manager, user_account)
 
