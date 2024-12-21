@@ -1,0 +1,9 @@
+[MASTER]
+max-module-lines=500
+
+[DESIGN]
+max-args=5
+max-locals=15
+max-returns=4
+max-branches=10
+max-statements=30
