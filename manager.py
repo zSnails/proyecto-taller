@@ -1,4 +1,4 @@
-from models import Career, Course, Account, AccountRole, Activity, LinkedList
+from models import Career, Course, Account, AccountRole, Activity, LinkedList, ReportType
 from typing import List, Optional
 from json import load, dump
 
@@ -492,10 +492,10 @@ class Manager:
             for acc in data["accounts"]:
                 if acc["id"] == account_id:
                     r = acc["reports"]
-                    if r == 1:
-                        acc["reports"] = 2
-                    elif r == 2:
-                        acc["reports"] = 1
+                    if r == ReportType.DAILY.value:
+                        acc["reports"] = ReportType.WEEKLY.value
+                    else:
+                        acc["reports"] = ReportType.DAILY.value
 
         with open("data.json", "w", encoding="utf-8") as f:
             dump(data, f)
