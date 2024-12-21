@@ -49,8 +49,6 @@ class Manager:
         except FileNotFoundError:
             with open("./data.json", "x") as data:
                 data.write('''{"accounts":[],"courses":[],"careers":[],"activities":[]}''')
-            exit()  # still not the best practice but hey, as I said previously
-            # it gets the job done
 
     def get_account(
         self, name: Optional[str] = None, id: Optional[int] = None
