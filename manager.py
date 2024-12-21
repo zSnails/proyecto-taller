@@ -1,6 +1,21 @@
-from models import Career, Course, Account, AccountRole, Activity, LinkedList, ReportType
-from typing import List, Optional
+from models import (
+    Career,
+    Course,
+    Account,
+    AccountRole,
+    Activity,
+    LinkedList,
+    ReportType,
+)
+from typing import Callable, Iterable, List, Optional
 from json import load, dump
+
+
+def find[T](pred: Callable[[T], bool], data: Iterable[T]) -> Optional[T]:
+    for element in data:
+        if pred(element):
+            return element
+    return None
 
 
 class Manager:
@@ -48,7 +63,9 @@ class Manager:
                     self.activities.append(Activity(**activity))
         except FileNotFoundError:
             with open("./data.json", "x") as data:
-                data.write('''{"accounts":[],"courses":[],"careers":[],"activities":[]}''')
+                data.write(
+                    """{"accounts":[],"courses":[],"careers":[],"activities":[]}"""
+                )
 
     def get_account(
         self, name: Optional[str] = None, id: Optional[int] = None
@@ -61,17 +78,12 @@ class Manager:
          - name: The name of a valid account
          - id: The id of a valid account
         """
-
-        for account in self.accounts:
-            if account.name == name or account.id == id:
-                return account
-        return None
+        return find(
+            lambda account: account.name == name or account.id == id, self.accounts
+        )
 
     def get_course(self, name: Optional[str] = None) -> Optional[Course]:
-        for course in self.courses:
-            if course.name == name:
-                return course
-        return None
+        return find(lambda course: course.name == name, self.courses)
 
     def get_career_courses(self, career_id: int) -> List[Course]:
         """
@@ -84,7 +96,7 @@ class Manager:
         -------
          - A list containing all registered courses available for the passed career
         """
-        return [course for course in self.courses if career_id in course.belongs_to]
+        return list(filter(lambda course: career_id in course.belongs_to, self.courses))
 
     def get_accounts(self) -> LinkedList[Account]:
         """
@@ -113,14 +125,16 @@ class Manager:
         -------
          - A list containing all accounts with an account type of STUDENT
         """
-        return [
-            student for student in self.accounts if student.role == AccountRole.STUDENT
-        ]
+        return list(
+            filter(lambda student: student.role == AccountRole.STUDENT, self.accounts)
+        )
 
-    def get_activity(self, name=None, id=None):
-        for activity in self.activities:
-            if activity.name == name or activity.id == id:
-                return activity
+    def get_activity(
+        self, name: Optional[str] = None, id: Optional[int] = None
+    ) -> Optional[Activity]:
+        return find(
+            lambda activity: activity.name == name or activity.id == id, self.activities
+        )
 
     def get_activities(self):
         return self.activities
@@ -140,10 +154,7 @@ class Manager:
         -------
          - A student or None
         """
-        for student in self.get_students():
-            if student.name == name or student.id == id:
-                return student
-        return None
+        return find(lambda student: student.name == name or student.id == id, self.get_students())
 
     def get_admins(self) -> List[Account]:
         """
@@ -157,7 +168,7 @@ class Manager:
         -------
          - A list containing all accounts with an account type of ADMIN
         """
-        return [admin for admin in self.accounts if admin.role == AccountRole.ADMIN]
+        return list(filter(lambda admin: admin.role == AccountRole.ADMIN, self.accounts))
 
     def get_admin(
         self, username: Optional[str] = None, id: Optional[int] = None
@@ -174,10 +185,8 @@ class Manager:
         -------
          - An admin or None
         """
-        for admin in self.get_admins():
-            if admin.name == username or admin.id == id:
-                return admin
-        return None
+        return find(lambda admin: admin.name == username or admin.id == id, self.get_admins())
+
 
     def get_careers(self) -> LinkedList[Career]:
         """
@@ -210,10 +219,7 @@ class Manager:
         -------
             -   Career: a career instance containing the requested data
         """
-        for career in self.careers:
-            if career.name == name or career.id == id:
-                return career
-        return None
+        return find(lambda career: career.name == name or career.id == id, self.careers)
 
     def get_account_courses(self, id=None, name=None) -> Optional[List[Course]]:
         """
@@ -233,7 +239,7 @@ class Manager:
 
         usr = self.get_account(id=id, name=name)
         if usr:
-            return [course for course in self.courses if course.id in usr.courses]
+            return list(filter(lambda course: course.id in usr.courses, self.courses))
 
         return None
 
