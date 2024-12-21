@@ -31,7 +31,7 @@ class ShowProfileCommand(Command):
         if career:
             print(f"{Fore.BLUE}Career{Style.RESET_ALL}: {career.name}")
 
-        courses = ctx.manager.get_courses(career_id=ctx.user.career)
+        courses = ctx.manager.get_career_courses(career_id=ctx.user.career)
         print(f"{Fore.MAGENTA}Courses{Style.RESET_ALL}:")
         for course in courses:
             if course.id not in ctx.user.courses:

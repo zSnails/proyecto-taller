@@ -75,7 +75,7 @@ class Manager:
                 return course
         return None
 
-    def get_courses(self, career_id: int) -> List[Course]:
+    def get_career_courses(self, career_id: int) -> List[Course]:
         """
         Returns a list containing all registered courses for the passed career
         Parameters

@@ -22,7 +22,7 @@ class RegisterActivityCommand(Command):
         _course = input("Bind to course?> (y/n)> ")
         course: Optional[int] = 0
         if _course == "y":
-            for c in ctx.manager.get_courses(ctx.user.career):
+            for c in ctx.manager.get_career_courses(ctx.user.career):
                 print(c.id, c.name)
             course = int(input("Enter course id> "))
             if course in ctx.user.passed or course in ctx.user.failed:

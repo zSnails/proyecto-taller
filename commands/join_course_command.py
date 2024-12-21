@@ -21,7 +21,7 @@ class JoinCourseCommand(Command):
     def run(self, ctx: Program) -> CommandCode:
         available_courses = [
             course
-            for course in ctx.manager.get_courses(ctx.user.career)
+            for course in ctx.manager.get_career_courses(ctx.user.career)
             if course.id not in ctx.user.courses
         ]
         if not available_courses:
